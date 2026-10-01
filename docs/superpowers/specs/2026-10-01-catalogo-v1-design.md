@@ -80,7 +80,8 @@ clássicos) só para preencher o layout de forma realista.
 - Integração Supabase
 - Carrinho ou fluxo de pedido estruturado
 - Páginas extras (sobre, contato, galeria)
-- Animações elaboradas (GSAP etc., como nas referências)
+- Animações elaboradas (GSAP etc., como nas referências) — exceção pontual:
+  animação de abertura, ver `2026-10-01-intro-splash-design.md`
 
 ## Critério de pronto
 
