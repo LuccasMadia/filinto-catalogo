@@ -59,10 +59,9 @@ clássicos) só para preencher o layout de forma realista.
   sem fotos reais nesta v1
 - Nome do produto
 - Preço (formatado em R$)
-- Botão "Adicionar ao pedido" → abre `https://wa.me/<numero>?text=...` com
-  mensagem pré-preenchida: "Olá! Quero pedir: [Nome do produto]"
-- Número de WhatsApp: placeholder a definir com o cliente (variável única,
-  fácil de trocar)
+- Sem botão individual — o pedido é feito pelo botão flutuante de WhatsApp,
+  único CTA da página
+- Número de WhatsApp: `55 67 8131-6194` (Filinto Sorvetes)
 
 ## Visual
 
