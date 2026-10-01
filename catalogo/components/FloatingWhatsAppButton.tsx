@@ -11,7 +11,7 @@ export function FloatingWhatsAppButton() {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Pedir no WhatsApp"
+      aria-label="Adicionar ao pedido"
       className="fixed bottom-4 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#AC1214] text-white shadow-xl transition hover:brightness-110"
     >
       <svg

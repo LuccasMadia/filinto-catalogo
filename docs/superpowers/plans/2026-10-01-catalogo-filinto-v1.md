@@ -14,7 +14,7 @@
 - Script font: Dancing Script (Google Font), used only for the logo/title area and category headings.
 - Mobile-first: components must read correctly at a 375px-wide viewport before desktop is considered.
 - No backend, no Supabase, no real product photos in this plan — product images use a neutral gray placeholder with a simple icon.
-- WhatsApp CTA format: tapping "Pedir no WhatsApp" opens `https://wa.me/<numero>?text=<mensagem>` with the message `Olá! Quero pedir: [Nome do produto]` (product-level) or `Olá! Quero ver o cardápio do Filinto.` (hero/floating button).
+- WhatsApp CTA format: tapping "Adicionar ao pedido" opens `https://wa.me/<numero>?text=<mensagem>` with the message `Olá! Quero pedir: [Nome do produto]` (product-level) or `Olá! Quero ver o cardápio do Filinto.` (hero/floating button).
 - The Next.js app lives in `catalogo/` at the repo root (repo root also holds `docs/`, `Referencias pinterest/`, `logo filinto.png` — keep those separate from app code).
 - The repo root already has its own git repo (initialized during brainstorming) — the Next.js scaffold must NOT create a nested `.git`.
 
@@ -492,7 +492,7 @@ export function ProductCard({ produto }: { produto: Produto }) {
         message={`Olá! Quero pedir: ${produto.nome}`}
         className="mt-1"
       >
-        Pedir no WhatsApp
+        Adicionar ao pedido
       </WhatsAppButton>
     </div>
   );
@@ -641,7 +641,7 @@ export function FloatingWhatsAppButton() {
         message="Olá! Quero ver o cardápio do Filinto."
         className="shadow-lg"
       >
-        Pedir no WhatsApp
+        Adicionar ao pedido
       </WhatsAppButton>
     </div>
   );
@@ -759,8 +759,8 @@ Expected: `✓ Compiled successfully`, server starts on `http://localhost:3000`.
 Open `http://localhost:3000` in a browser (use the claude-in-chrome tools if available, otherwise ask Lucca to check). Confirm, at a 375px-wide (mobile) viewport first, then desktop:
 - Hero shows the red (`#AC1214`) background, the Filinto logo, and the Dancing Script title/slogan.
 - Three category sections render in order: Sorvetes, Açaí, Milkshakes, each with its own Dancing Script heading.
-- Each product card shows a gray placeholder image, product name, price in `R$ X,XX` format, and a red "Pedir no WhatsApp" button.
-- A floating "Pedir no WhatsApp" button stays fixed in the bottom-right corner while scrolling through all sections.
+- Each product card shows a gray placeholder image, product name, price in `R$ X,XX` format, and a red "Adicionar ao pedido" button.
+- A floating "Adicionar ao pedido" button stays fixed in the bottom-right corner while scrolling through all sections.
 - Clicking any WhatsApp button opens (or attempts to open) `https://wa.me/...` with the expected pre-filled message.
 - Footer shows the Filinto name, placeholder address/hours text, and WhatsApp/Instagram labels.
 

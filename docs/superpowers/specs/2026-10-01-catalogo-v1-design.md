@@ -27,7 +27,7 @@ Logo em script branco sobre fundo vermelho, ícone de casquinha de sorvete.
 Página única (`/`), scroll vertical, mobile-first:
 
 1. **Topo (hero)**: fundo vermelho da marca (`#AC1214`), logo do Filinto,
-   slogan curto, botão flutuante/fixo "Pedir no WhatsApp" sempre visível
+   slogan curto, botão flutuante/fixo "Adicionar ao pedido" sempre visível
    durante o scroll.
 2. **Seções por categoria**: "Sorvetes", "Açaí", "Milkshakes" — lista
    genérica plausível para a apresentação (ajustável depois). Cada seção tem
@@ -59,7 +59,7 @@ clássicos) só para preencher o layout de forma realista.
   sem fotos reais nesta v1
 - Nome do produto
 - Preço (formatado em R$)
-- Botão "Pedir no WhatsApp" → abre `https://wa.me/<numero>?text=...` com
+- Botão "Adicionar ao pedido" → abre `https://wa.me/<numero>?text=...` com
   mensagem pré-preenchida: "Olá! Quero pedir: [Nome do produto]"
 - Número de WhatsApp: placeholder a definir com o cliente (variável única,
   fácil de trocar)

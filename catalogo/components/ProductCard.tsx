@@ -16,7 +16,7 @@ export function ProductCard({ produto }: { produto: Produto }) {
         message={`Olá! Quero pedir: ${produto.nome}`}
         className="mt-1"
       >
-        Pedir no WhatsApp
+        Adicionar ao pedido
       </WhatsAppButton>
     </div>
   );
