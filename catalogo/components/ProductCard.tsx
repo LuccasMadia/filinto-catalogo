@@ -1,7 +1,6 @@
 import type { Produto } from "@/lib/produtos";
 import { formatPrice } from "@/lib/format";
 import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
-import { WhatsAppButton } from "./WhatsAppButton";
 
 export function ProductCard({ produto }: { produto: Produto }) {
   return (
@@ -12,12 +11,6 @@ export function ProductCard({ produto }: { produto: Produto }) {
         <p className="text-sm text-neutral-500">{produto.descricao}</p>
       ) : null}
       <span className="font-bold text-[#AC1214]">{formatPrice(produto.preco)}</span>
-      <WhatsAppButton
-        message={`Olá! Quero pedir: ${produto.nome}`}
-        className="mt-1"
-      >
-        Adicionar ao pedido
-      </WhatsAppButton>
     </div>
   );
 }
