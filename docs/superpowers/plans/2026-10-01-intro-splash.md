@@ -4,7 +4,7 @@
 
 **Goal:** Ao abrir `/`, tocar uma sequência de abertura (fundo vermelho cheio → logo → texto → encolhe para o Hero atual) antes do layout normal, usando Framer Motion.
 
-**Architecture:** Um componente client `IntroSplash` renderizado acima do `Hero` em `page.tsx`. `IntroSplash` e `Hero` compartilham `layoutId`s do Framer Motion (`hero-bg` no contêiner vermelho, `hero-logo` no wrapper da logo). Quando `IntroSplash` desmonta (dentro de `AnimatePresence`), o Framer Motion anima automaticamente a transição de tamanho/posição da caixa de tela cheia para a caixa do `Hero`, que já está montado por baixo.
+**Architecture:** ~~Um componente client `IntroSplash` renderizado acima do `Hero`~~ — **revisado durante a implementação**: um `layoutId` compartilhado entre dois componentes sempre montados simultaneamente (`IntroSplash` fixo sobre a página + `Hero` já presente por baixo) não é um padrão suportado pelo Framer Motion — na prática ele produz um Hero final com opacidade/cor quebradas. A arquitetura final é um único componente `Hero` com estado de fase (`"intro" | "done"`), usando a prop `layout` do Framer Motion para animar a própria transição de tamanho/posição (tela cheia → tamanho do header normal) e `initial`/`animate` para o fade-in da logo e do texto. Não existe mais `IntroSplash.tsx`.
 
 **Tech Stack:** Next.js App Router, React 19, Tailwind CSS, Framer Motion (`framer-motion`).
 
