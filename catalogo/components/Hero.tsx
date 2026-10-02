@@ -4,7 +4,6 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { HeroNav } from "./HeroNav";
-import { HeroFruitDecor } from "./HeroFruitDecor";
 import { HeroDripEdge } from "./HeroDripEdge";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/config";
@@ -69,8 +68,6 @@ export function Hero() {
           className="pointer-events-none absolute inset-0"
         >
           <HeroNav />
-          <HeroFruitDecor side="left" />
-          <HeroFruitDecor side="right" />
           <HeroDripEdge />
         </motion.div>
       )}
