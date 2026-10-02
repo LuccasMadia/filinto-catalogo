@@ -11,8 +11,8 @@ export function HeroFruitDecor({ side, src }: HeroFruitDecorProps) {
       aria-hidden="true"
       className={
         side === "left"
-          ? "absolute top-2 left-2 z-0 h-12 w-12 opacity-80 sm:top-4 sm:left-6 sm:h-20 sm:w-20"
-          : "absolute top-2 right-2 z-0 h-12 w-12 opacity-80 sm:top-4 sm:right-6 sm:h-20 sm:w-20"
+          ? "absolute top-16 left-2 z-0 h-12 w-12 opacity-80 sm:top-20 sm:left-6 sm:h-20 sm:w-20"
+          : "absolute top-16 right-2 z-0 h-12 w-12 opacity-80 sm:top-20 sm:right-6 sm:h-20 sm:w-20"
       }
     >
       {src ? (
