@@ -1,4 +1,4 @@
-import type { Produto } from "@/lib/produtos";
+import type { Produto } from "@/lib/catalogo-store";
 import { formatPrice } from "@/lib/format";
 import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 

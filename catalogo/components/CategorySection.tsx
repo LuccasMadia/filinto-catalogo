@@ -1,4 +1,4 @@
-import type { Produto } from "@/lib/produtos";
+import type { Produto } from "@/lib/catalogo-store";
 import { ProductCard } from "./ProductCard";
 
 type CategorySectionProps = {
