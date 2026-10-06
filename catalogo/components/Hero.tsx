@@ -4,7 +4,6 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { HeroNav } from "./HeroNav";
-import { HeroFruitDecor } from "./HeroFruitDecor";
 import { HeroDripEdge } from "./HeroDripEdge";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/config";
@@ -58,7 +57,7 @@ export function Hero() {
       className={
         isIntro
           ? "fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#AC1214] px-4 text-center text-white"
-          : "relative overflow-hidden bg-[radial-gradient(circle_at_center,#C81619_0%,#8A0F11_100%)] px-4 py-16 text-center text-white"
+          : "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,#C81619_0%,#8A0F11_100%)] px-4 py-16 text-center text-white"
       }
     >
       {!isIntro && (
@@ -69,8 +68,6 @@ export function Hero() {
           className="pointer-events-none absolute inset-0"
         >
           <HeroNav />
-          <HeroFruitDecor side="left" src="/hero-fruit.png" />
-          <HeroFruitDecor side="right" src="/hero-fruit.png" />
           <HeroDripEdge />
         </motion.div>
       )}
@@ -115,13 +112,23 @@ export function Hero() {
           transition={{ duration: 0.4 }}
           className="relative z-20 mt-4"
         >
-          <Image
-            src="/hero-sorvete.png"
-            alt="Casquinha de sorvete Filinto"
-            width={1086}
-            height={1448}
-            className="-mb-6 h-auto w-[220px] mx-auto drop-shadow-2xl sm:w-[280px]"
-          />
+          <div className="relative mx-auto -mb-6 w-[220px] sm:w-[280px]">
+            <Image
+              src="/hero-sorvete.png"
+              alt="Casquinha de sorvete Filinto"
+              width={1086}
+              height={1448}
+              className="h-auto w-full drop-shadow-2xl"
+            />
+            <div className="absolute -right-4 top-10 flex h-20 w-20 rotate-12 flex-col items-center justify-center rounded-full bg-white text-center shadow-lg sm:-right-8 sm:top-14 sm:h-24 sm:w-24">
+              <span className="text-xl leading-none font-extrabold text-[#AC1214] sm:text-2xl">
+                100%
+              </span>
+              <span className="mt-0.5 text-[10px] font-semibold tracking-wide text-[#AC1214] uppercase sm:text-xs">
+                artesanal
+              </span>
+            </div>
+          </div>
           <a
             href={whatsappUrl}
             target="_blank"
