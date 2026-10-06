@@ -1,4 +1,4 @@
-import { Document, Page, View, Text, Font, StyleSheet, pdf } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Svg, Path, Font, StyleSheet, pdf } from "@react-pdf/renderer";
 import type { Categoria, Produto } from "@/lib/catalogo-store";
 import { formatPrice } from "@/lib/format";
 
@@ -28,17 +28,44 @@ const styles = StyleSheet.create({
     color: "#AC1214",
     marginBottom: 8,
   },
-  produtoRow: {
+  grid: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 4,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEEEEE",
+    flexWrap: "wrap",
+    gap: 12,
   },
-  produtoNome: { flex: 1 },
-  produtoDescricao: { fontSize: 9, color: "#666666" },
-  produtoPreco: { fontWeight: "bold", color: "#AC1214" },
+  card: {
+    width: 160,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 12,
+  },
+  cardImagem: {
+    height: 90,
+    backgroundColor: "#E5E5E5",
+    borderRadius: 6,
+    marginBottom: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cardNome: { fontSize: 10, fontWeight: "bold", color: "#1A1A1A", marginBottom: 2 },
+  cardDescricao: { fontSize: 8, color: "#666666", marginBottom: 2 },
+  cardPreco: { fontSize: 11, fontWeight: "bold", color: "#AC1214" },
 });
+
+function PlaceholderIcone() {
+  return (
+    <Svg viewBox="0 0 24 24" style={{ width: 28, height: 28 }}>
+      <Path
+        d="M8 10a4 4 0 1 1 8 0c1.5 0 2.5 1 2.5 2.3 0 1.2-.9 2.2-2.1 2.3L12 21l-4.4-6.4C6.4 14.5 5.5 13.5 5.5 12.3 5.5 11 6.5 10 8 10Z"
+        stroke="#A3A3A3"
+        strokeWidth={1.5}
+        fill="none"
+      />
+    </Svg>
+  );
+}
 
 export type CatalogoPdfProps = {
   categorias: Categoria[];
@@ -58,17 +85,20 @@ export function CatalogoPdf({ categorias, produtos }: CatalogoPdfProps) {
           return (
             <View key={categoria.id} style={styles.categoria}>
               <Text style={styles.categoriaTitulo}>{categoria.nome}</Text>
-              {produtosDaCategoria.map((produto) => (
-                <View key={produto.id} style={styles.produtoRow}>
-                  <View style={styles.produtoNome}>
-                    <Text>{produto.nome}</Text>
+              <View style={styles.grid}>
+                {produtosDaCategoria.map((produto) => (
+                  <View key={produto.id} style={styles.card} wrap={false}>
+                    <View style={styles.cardImagem}>
+                      <PlaceholderIcone />
+                    </View>
+                    <Text style={styles.cardNome}>{produto.nome}</Text>
                     {produto.descricao ? (
-                      <Text style={styles.produtoDescricao}>{produto.descricao}</Text>
+                      <Text style={styles.cardDescricao}>{produto.descricao}</Text>
                     ) : null}
+                    <Text style={styles.cardPreco}>{formatPrice(produto.preco)}</Text>
                   </View>
-                  <Text style={styles.produtoPreco}>{formatPrice(produto.preco)}</Text>
-                </View>
-              ))}
+                ))}
+              </View>
             </View>
           );
         })}
