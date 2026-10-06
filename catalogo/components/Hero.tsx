@@ -112,22 +112,15 @@ export function Hero() {
           transition={{ duration: 0.4 }}
           className="relative z-20 mt-4"
         >
-          <div className="relative mx-auto -mb-6 w-[220px] sm:w-[280px]">
+          <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl">
             <Image
-              src="/hero-sorvete.png"
-              alt="Casquinha de sorvete Filinto"
-              width={1086}
-              height={1448}
-              className="h-auto w-full drop-shadow-2xl"
+              src="/hero-fachada.png"
+              alt="Fachada da loja Filinto Sorvetes"
+              width={1672}
+              height={941}
+              className="h-auto w-full"
+              priority
             />
-            <div className="absolute -right-4 top-10 flex h-20 w-20 rotate-12 flex-col items-center justify-center rounded-full bg-white text-center shadow-lg sm:-right-8 sm:top-14 sm:h-24 sm:w-24">
-              <span className="text-xl leading-none font-extrabold text-[#AC1214] sm:text-2xl">
-                100%
-              </span>
-              <span className="mt-0.5 text-[10px] font-semibold tracking-wide text-[#AC1214] uppercase sm:text-xs">
-                artesanal
-              </span>
-            </div>
           </div>
           <a
             href={whatsappUrl}
