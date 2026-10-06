@@ -47,7 +47,6 @@ array estático:
 type Categoria = {
   id: string;
   nome: string;
-  ordem: number;
 };
 
 type Produto = {
@@ -56,13 +55,14 @@ type Produto = {
   nome: string;
   preco: number;
   descricao?: string;
-  ordem: number;
 };
 ```
 
 `categoria` como union fixa (`"sorvetes" | "acai" | "milkshakes"`) deixa de
 existir — categorias passam a ser entidades com id próprio, criadas pelo
-admin.
+admin. A ordem de categorias e produtos é a posição deles no array (sem
+campo `ordem` separado) — reordenar é trocar a posição de dois elementos no
+array, o que já basta para as setas de mover pra cima/baixo do admin.
 
 ## Autenticação do painel
 
