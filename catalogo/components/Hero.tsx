@@ -62,26 +62,19 @@ export function Hero() {
     >
       {!isIntro && (
         <>
-          <motion.div
-            initial={reducedMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="absolute inset-0 z-0"
-          >
-            <Image
-              src="/hero-fachada.png"
-              alt="Fachada da loja Filinto Sorvetes"
-              fill
-              priority
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(140,15,17,0.85)_0%,rgba(172,18,20,0.75)_45%,rgba(140,15,17,0.9)_100%)]" />
-          </motion.div>
+          <Image
+            src="/hero-tubs.png"
+            alt="Potes de sorvete Filinto: Napolitano, Flocos, Abacaxi e Morango com Creme"
+            fill
+            priority
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-[#8A0F11]/60" />
           <motion.div
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
-            className="pointer-events-none absolute inset-0 z-10"
+            className="pointer-events-none absolute inset-0"
           >
             <HeroNav />
             <HeroDripEdge />
@@ -98,8 +91,8 @@ export function Hero() {
         }}
         className={
           isIntro
-            ? "relative z-20 mx-auto mb-4 h-[140px] w-[140px]"
-            : "relative z-20 mx-auto mb-0 h-0 w-0 overflow-hidden opacity-0"
+            ? "relative z-10 mx-auto mb-4 h-[140px] w-[140px]"
+            : "relative z-10 mx-auto mb-0 h-0 w-0 overflow-hidden opacity-0"
         }
       >
         <Image
@@ -115,7 +108,7 @@ export function Hero() {
         initial={isIntro ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
         transition={{ delay: isIntro ? 0.7 : 0, duration: 0.3 }}
-        className="relative z-20"
+        className="relative z-10"
       >
         <h1 className="font-[family-name:var(--font-dancing-script)] text-5xl sm:text-6xl">
           Filinto Sorvetes
@@ -127,13 +120,13 @@ export function Hero() {
           initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="relative z-20 mt-6"
+          className="relative z-20 mt-4"
         >
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-base font-semibold text-[#AC1214] shadow-lg transition hover:brightness-95"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-base font-semibold text-[#AC1214] shadow-lg transition hover:brightness-95"
           >
             <svg
               viewBox="0 0 24 24"
