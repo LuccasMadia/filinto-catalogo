@@ -8,12 +8,33 @@ import { AdminCategoriaCard } from "./AdminCategoriaCard";
 export function AdminPanel() {
   const store = useCatalogStore();
   const [novaCategoria, setNovaCategoria] = useState("");
+  const [exportando, setExportando] = useState(false);
 
   function handleAddCategoria(event: FormEvent) {
     event.preventDefault();
     if (!novaCategoria.trim()) return;
     store.addCategoria(novaCategoria.trim());
     setNovaCategoria("");
+  }
+
+  async function handleExportarPdf() {
+    setExportando(true);
+    try {
+      const { buildCatalogoPdfBlob } = await import("@/lib/pdf/catalogo-pdf");
+      const blob = await buildCatalogoPdfBlob({
+        categorias: store.categorias,
+        produtos: store.produtos,
+      });
+      const url = URL.createObjectURL(blob);
+      const data = new Date().toISOString().slice(0, 10);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `catalogo-filinto-${data}.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExportando(false);
+    }
   }
 
   function handleRestaurarPadrao() {
@@ -32,6 +53,14 @@ export function AdminPanel() {
           Painel Filinto
         </h1>
         <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={handleExportarPdf}
+            disabled={exportando}
+            className="rounded-lg bg-[#AC1214] px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+          >
+            {exportando ? "Gerando..." : "Exportar PDF"}
+          </button>
           <button
             type="button"
             onClick={handleRestaurarPadrao}
