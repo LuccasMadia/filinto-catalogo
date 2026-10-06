@@ -57,19 +57,36 @@ export function Hero() {
       className={
         isIntro
           ? "fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#AC1214] px-4 text-center text-white"
-          : "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,#C81619_0%,#8A0F11_100%)] px-4 py-16 text-center text-white"
+          : "relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-16 text-center text-white"
       }
     >
       {!isIntro && (
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="pointer-events-none absolute inset-0"
-        >
-          <HeroNav />
-          <HeroDripEdge />
-        </motion.div>
+        <>
+          <motion.div
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="absolute inset-0 z-0"
+          >
+            <Image
+              src="/hero-fachada.png"
+              alt="Fachada da loja Filinto Sorvetes"
+              fill
+              priority
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(140,15,17,0.85)_0%,rgba(172,18,20,0.75)_45%,rgba(140,15,17,0.9)_100%)]" />
+          </motion.div>
+          <motion.div
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="pointer-events-none absolute inset-0 z-10"
+          >
+            <HeroNav />
+            <HeroDripEdge />
+          </motion.div>
+        </>
       )}
       <motion.div
         layout
@@ -81,8 +98,8 @@ export function Hero() {
         }}
         className={
           isIntro
-            ? "relative z-10 mx-auto mb-4 h-[140px] w-[140px]"
-            : "relative z-10 mx-auto mb-0 h-0 w-0 overflow-hidden opacity-0"
+            ? "relative z-20 mx-auto mb-4 h-[140px] w-[140px]"
+            : "relative z-20 mx-auto mb-0 h-0 w-0 overflow-hidden opacity-0"
         }
       >
         <Image
@@ -98,7 +115,7 @@ export function Hero() {
         initial={isIntro ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
         transition={{ delay: isIntro ? 0.7 : 0, duration: 0.3 }}
-        className="relative z-10"
+        className="relative z-20"
       >
         <h1 className="font-[family-name:var(--font-dancing-script)] text-5xl sm:text-6xl">
           Filinto Sorvetes
@@ -110,23 +127,13 @@ export function Hero() {
           initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="relative z-20 mt-4"
+          className="relative z-20 mt-6"
         >
-          <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl">
-            <Image
-              src="/hero-fachada.png"
-              alt="Fachada da loja Filinto Sorvetes"
-              width={1672}
-              height={941}
-              className="h-auto w-full"
-              priority
-            />
-          </div>
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-base font-semibold text-[#AC1214] shadow-lg transition hover:brightness-95"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-base font-semibold text-[#AC1214] shadow-lg transition hover:brightness-95"
           >
             <svg
               viewBox="0 0 24 24"
