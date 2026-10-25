@@ -105,7 +105,7 @@ function Gaveta({ onFechar }: { onFechar: () => void }) {
                   <div className="flex justify-between gap-2 text-sm">
                     <span className="font-medium">{i.nome}</span>
                     <span className="shrink-0">
-                      {i.preco > 0 ? formatPrice(i.preco * i.quantidade) : formatPrice(0)}
+                      {formatPrice(i.preco * i.quantidade)}
                     </span>
                   </div>
                   <div className="flex w-36 items-center justify-between rounded-full bg-brand">

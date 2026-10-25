@@ -6,7 +6,7 @@ Cada ação que se repete tem um nome oficial, um componente único e regras fix
 
 ### Adicionar ao carrinho
 - **Telas:** catálogo público (card de cada produto, `ProductCard`).
-- **Componente único:** `components/AddToCartButton.tsx` (estado em `lib/useCart.ts`, regras em `lib/pedidos-store.ts`).
+- **Componente único:** `components/AddToCartButton.tsx` (estado em `lib/useCart.tsx`, regras em `lib/pedidos-store.ts`).
 - **Regras fixas:**
   - Quantidade 0: botão "Adicionar". Quantidade >= 1: seletor com "−", quantidade e "+".
   - Rótulos de acessibilidade: "Diminuir quantidade de {nome}" / "Aumentar quantidade de {nome}".
@@ -50,6 +50,7 @@ Cada ação que se repete tem um nome oficial, um componente único e regras fix
   - Cada pedido mostra: "Pedido #{id}", data/hora (pt-BR), nome · telefone, itens ("{qtd}× {nome}"), "Obs.: ..." se houver, "Total: ..." ("Sob consulta" quando total 0).
   - Status possíveis: Novo, Em preparo, Pronto, Entregue, Cancelado (seletor por pedido).
   - Botão "Cancelar pedido" só aparece se o status não é Cancelado nem Entregue; pede confirmação "Cancelar o pedido #{id}?".
+  - No seletor de status: pede confirmação ao escolher Cancelado ("Cancelar o pedido #{id}?") e ao reabrir um pedido Cancelado/Entregue ("Reabrir o pedido #{id}?"); se recusar, o status não muda.
 
 ## Ações do catálogo existentes (conferidas no código)
 

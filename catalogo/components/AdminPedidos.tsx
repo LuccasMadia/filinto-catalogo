@@ -59,7 +59,14 @@ export function AdminPedidos({ pedidos, atualizarStatus }: Props) {
               <select
                 id={`status-${p.id}`}
                 value={p.status}
-                onChange={(e) => atualizarStatus(p.id, e.target.value as StatusPedido)}
+                onChange={(e) => {
+                  const novo = e.target.value as StatusPedido;
+                  const fechado = p.status === "cancelado" || p.status === "entregue";
+                  const msg =
+                    novo === "cancelado" ? `Cancelar o pedido #${p.id}?` : `Reabrir o pedido #${p.id}?`;
+                  if ((fechado || novo === "cancelado") && !confirm(msg)) return;
+                  atualizarStatus(p.id, novo);
+                }}
                 className="min-h-11 rounded-lg border border-neutral-300 px-3 text-sm"
               >
                 {(Object.keys(STATUS_LABEL) as StatusPedido[]).map((s) => (
