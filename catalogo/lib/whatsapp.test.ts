@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildWhatsAppUrl } from "./whatsapp";
+import { buildWhatsAppUrl, buildPedidoMessage } from "./whatsapp";
 
 describe("buildWhatsAppUrl", () => {
   it("builds a wa.me URL with the message URL-encoded", () => {
@@ -15,5 +15,11 @@ describe("buildWhatsAppUrl", () => {
   it("works with a simple ASCII message", () => {
     const url = buildWhatsAppUrl("5511999999999", "Hello world");
     expect(url).toBe("https://wa.me/5511999999999?text=Hello%20world");
+  });
+});
+
+describe("buildPedidoMessage", () => {
+  it("builds the short order message", () => {
+    expect(buildPedidoMessage(1042)).toBe("Olá! Meu pedido é o #1042.");
   });
 });
