@@ -3,6 +3,7 @@
 import { MotionConfig } from "framer-motion";
 import { Hero } from "@/components/Hero";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
+import { CartBar } from "@/components/CartBar";
 import { CategoryNav } from "@/components/CategoryNav";
 import { CategorySection } from "@/components/CategorySection";
 import { Footer } from "@/components/Footer";
@@ -28,6 +29,7 @@ export default function Home() {
         ))}
         <Footer />
         <FloatingWhatsAppButton />
+        <CartBar />
       </main>
       </CartProvider>
     </MotionConfig>
