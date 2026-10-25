@@ -89,3 +89,20 @@ export function criarPedido(
 export function atualizarStatus(pedidos: Pedido[], id: number, status: StatusPedido): Pedido[] {
   return pedidos.map((p) => (p.id === id ? { ...p, status } : p));
 }
+
+export type LinhaProducao = { produtoId: string; nome: string; quantidade: number; pedidos: number };
+
+// Pedidos ainda a produzir: novos e em preparo (pronto/entregue/cancelado já saíram da produção).
+export function listaProducao(pedidos: Pedido[]): LinhaProducao[] {
+  const porProduto = new Map<string, LinhaProducao>();
+  for (const p of pedidos) {
+    if (p.status !== "novo" && p.status !== "em_preparo") continue;
+    for (const i of p.itens) {
+      const linha = porProduto.get(i.produtoId) ?? { produtoId: i.produtoId, nome: i.nome, quantidade: 0, pedidos: 0 };
+      linha.quantidade += i.quantidade;
+      linha.pedidos += 1;
+      porProduto.set(i.produtoId, linha);
+    }
+  }
+  return [...porProduto.values()].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+}

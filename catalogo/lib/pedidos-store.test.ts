@@ -8,6 +8,7 @@ import {
   validarCliente,
   criarPedido,
   atualizarStatus,
+  listaProducao,
   type ItemCarrinho,
   type Pedido,
 } from "./pedidos-store";
@@ -94,5 +95,29 @@ describe("pedidos", () => {
     const r = atualizarStatus([pedidoComId(1001), pedidoComId(1002)], 1002, "pronto");
     expect(r[0].status).toBe("novo");
     expect(r[1].status).toBe("pronto");
+  });
+});
+
+describe("listaProducao", () => {
+  it("soma por produto só de pedidos novos e em preparo, em ordem alfabética", () => {
+    const com = (id: number, status: Pedido["status"], itens: ItemCarrinho[]): Pedido => ({
+      ...pedidoComId(id),
+      status,
+      itens,
+    });
+    const r = listaProducao([
+      com(1, "novo", [item("b", 10, 2), item("a", 10, 1)]),
+      com(2, "em_preparo", [item("b", 10, 3)]),
+      com(3, "pronto", [item("a", 10, 9)]),
+      com(4, "cancelado", [item("c", 10, 9)]),
+    ]);
+    expect(r.map((l) => [l.produtoId, l.quantidade, l.pedidos])).toEqual([
+      ["a", 1, 1],
+      ["b", 5, 2],
+    ]);
+  });
+
+  it("devolve lista vazia sem pedidos a produzir", () => {
+    expect(listaProducao([])).toEqual([]);
   });
 });

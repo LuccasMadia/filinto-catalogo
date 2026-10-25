@@ -52,6 +52,11 @@ Cada ação que se repete tem um nome oficial, um componente único e regras fix
   - Botão "Cancelar pedido" só aparece se o status não é Cancelado nem Entregue; pede confirmação "Cancelar o pedido #{id}?".
   - No seletor de status: pede confirmação ao escolher Cancelado ("Cancelar o pedido #{id}?") e ao reabrir um pedido Cancelado/Entregue ("Reabrir o pedido #{id}?"); se recusar, o status não muda.
 
+### Gerar lista de produção
+- **Telas:** admin, aba "Pedidos" (topo).
+- **Componente único:** `AdminPedidos` (botão) + `lib/pdf/producao-pdf.tsx`; soma em `listaProducao` (`lib/pedidos-store.ts`).
+- **Regras fixas:** botão "Lista de produção (PDF)"; soma por produto as quantidades dos pedidos com status Novo e Em preparo (Pronto, Entregue e Cancelado ficam de fora); ordem alfabética; cada linha mostra "N× nome" e "k pedido(s)"; botão desabilitado e aviso "Nada a produzir: não há pedidos novos ou em preparo." quando a lista é vazia; erro "Não foi possível gerar a lista. Tente novamente."; arquivo `lista-producao-AAAA-MM-DD.pdf`.
+
 ## Ações do catálogo existentes (conferidas no código)
 
 ### Exportar PDF
