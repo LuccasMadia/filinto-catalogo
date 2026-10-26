@@ -3,15 +3,10 @@
 import { useState, type FormEvent } from "react";
 import { useCatalogStore } from "@/lib/useCatalogStore";
 import { logout } from "@/app/admin/login/actions";
-import { usePedidos } from "@/lib/usePedidos";
 import { AdminCategoriaCard } from "./AdminCategoriaCard";
-import { AdminPedidos } from "./AdminPedidos";
 
 export function AdminPanel() {
   const store = useCatalogStore();
-  const { pedidos, atualizarStatus } = usePedidos();
-  const [aba, setAba] = useState<"catalogo" | "pedidos">("catalogo");
-  const novos = pedidos.filter((p) => p.status === "novo").length;
   const [novaCategoria, setNovaCategoria] = useState("");
   const [exportando, setExportando] = useState(false);
   const [erroPdf, setErroPdf] = useState(false);
@@ -46,15 +41,6 @@ export function AdminPanel() {
     }
   }
 
-  function handleRestaurarPadrao() {
-    const confirmado = confirm(
-      "Restaurar os dados originais? Todas as edições feitas no painel serão perdidas."
-    );
-    if (confirmado) {
-      store.restaurarPadrao();
-    }
-  }
-
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -69,13 +55,6 @@ export function AdminPanel() {
             className="rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
           >
             {exportando ? "Gerando..." : "Exportar PDF"}
-          </button>
-          <button
-            type="button"
-            onClick={handleRestaurarPadrao}
-            className="rounded-lg border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700"
-          >
-            Restaurar padrão
           </button>
           <form action={logout}>
             <button
@@ -94,34 +73,9 @@ export function AdminPanel() {
         </p>
       ) : null}
       <p className="mb-4 text-sm text-neutral-600">
-        As edições ficam salvas só neste navegador. Isso vale também para os pedidos.
+        As edições ficam salvas só neste navegador.
       </p>
 
-      <div role="tablist" aria-label="Seções do painel" className="mb-6 flex gap-2">
-        {(["catalogo", "pedidos"] as const).map((id) => (
-          <button
-            key={id}
-            type="button"
-            role="tab"
-            id={`tab-${id}`}
-            aria-selected={aba === id}
-            aria-controls={`painel-${id}`}
-            onClick={() => setAba(id)}
-            className={`min-h-11 rounded-lg px-4 text-sm font-medium ${
-              aba === id ? "bg-brand text-white" : "border border-neutral-300 text-neutral-700"
-            }`}
-          >
-            {id === "catalogo" ? "Catálogo" : "Pedidos"}
-            {id === "pedidos" && novos > 0 ? (
-              <span className="ml-2 rounded-full bg-white px-2 py-0.5 text-xs text-brand">
-                {novos}
-              </span>
-            ) : null}
-          </button>
-        ))}
-      </div>
-
-      <div role="tabpanel" id="painel-catalogo" aria-labelledby="tab-catalogo" hidden={aba !== "catalogo"}>
       <form onSubmit={handleAddCategoria} className="mb-6 flex gap-2">
         <input
           value={novaCategoria}
@@ -148,10 +102,6 @@ export function AdminPanel() {
             isLast={index === store.categorias.length - 1}
           />
         ))}
-      </div>
-      </div>
-      <div role="tabpanel" id="painel-pedidos" aria-labelledby="tab-pedidos" hidden={aba !== "pedidos"}>
-        <AdminPedidos pedidos={pedidos} atualizarStatus={atualizarStatus} />
       </div>
     </main>
   );

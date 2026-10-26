@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Image from "next/image";
 import type { Categoria, Produto } from "@/lib/catalogo-store";
 import type { CatalogStore } from "@/lib/useCatalogStore";
-import { formatPrice } from "@/lib/format";
 import { AdminProdutoModal } from "./AdminProdutoModal";
 
 type AdminCategoriaCardProps = {
@@ -53,7 +53,7 @@ export function AdminCategoriaCard({
               className="flex-1 rounded-lg border border-neutral-300 px-2 py-1"
               autoFocus
             />
-            <button type="submit" className="text-sm font-medium text-[#AC1214]">
+            <button type="submit" className="text-sm font-medium text-brand">
               Salvar
             </button>
             <button
@@ -68,12 +68,12 @@ export function AdminCategoriaCard({
             </button>
           </form>
         ) : (
-          <h2 className="font-[family-name:var(--font-dancing-script)] text-2xl text-[#AC1214]">
+          <h2 className="font-[family-name:var(--font-dancing-script)] text-2xl text-brand">
             {categoria.nome}
           </h2>
         )}
 
-        <div className="flex items-center gap-2 text-sm text-neutral-500">
+        <div className="flex flex-wrap items-center justify-end gap-x-3 text-sm text-neutral-600 [&_button]:min-h-10 [&_button]:px-1">
           <button
             type="button"
             disabled={isFirst}
@@ -109,11 +109,24 @@ export function AdminCategoriaCard({
             key={produto.id}
             className="flex items-center justify-between gap-2 rounded-lg border border-neutral-100 px-3 py-2"
           >
-            <div>
-              <p className="font-medium text-neutral-900">{produto.nome}</p>
-              <p className="text-sm text-neutral-500">{formatPrice(produto.preco)}</p>
+            <div className="flex min-w-0 items-center gap-3">
+              {produto.imagem ? (
+                <Image
+                  src={produto.imagem}
+                  alt={produto.nome}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="h-12 w-12 shrink-0 rounded-lg bg-neutral-200" aria-hidden />
+              )}
+              <div className="min-w-0">
+                <p className="font-medium text-neutral-900">{produto.nome}</p>
+                {produto.esgotado ? <p className="text-sm text-neutral-500">Esgotado</p> : null}
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm [&_button]:min-h-10 [&_button]:px-1">
               <button
                 type="button"
                 disabled={index === 0}
@@ -134,8 +147,14 @@ export function AdminCategoriaCard({
               </button>
               <button
                 type="button"
+                onClick={() => store.updateProduto(produto.id, { esgotado: !produto.esgotado })}
+              >
+                {produto.esgotado ? "Marcar disponível" : "Marcar esgotado"}
+              </button>
+              <button
+                type="button"
                 onClick={() => setEditando(produto)}
-                className="text-[#AC1214]"
+                className="text-brand"
               >
                 Editar
               </button>

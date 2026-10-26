@@ -15,7 +15,7 @@ import {
   moveProduto as moveProdutoPura,
 } from "./catalogo-store";
 
-const STORAGE_KEY = "filinto-catalogo-v1";
+const STORAGE_KEY = "filinto-catalogo-v3";
 
 export function useCatalogStore() {
   const [state, setState] = useState<CatalogoState>(DEFAULT_CATALOGO);
@@ -31,7 +31,11 @@ export function useCatalogStore() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+      // cota cheia (fotos grandes): a edição vale só até recarregar
+    }
   }, [state]);
 
   return {
@@ -49,7 +53,6 @@ export function useCatalogStore() {
     removeProduto: (id: string) => setState((s) => removeProdutoPura(s, id)),
     moveProduto: (id: string, direction: "up" | "down") =>
       setState((s) => moveProdutoPura(s, id, direction)),
-    restaurarPadrao: () => setState(DEFAULT_CATALOGO),
   };
 }
 

@@ -2,12 +2,9 @@
 
 import { MotionConfig } from "framer-motion";
 import { Hero } from "@/components/Hero";
-import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
-import { CartBar } from "@/components/CartBar";
 import { CategoryNav } from "@/components/CategoryNav";
 import { CategorySection } from "@/components/CategorySection";
 import { Footer } from "@/components/Footer";
-import { CartProvider } from "@/lib/useCart";
 import { useCatalogStore } from "@/lib/useCatalogStore";
 
 export default function Home() {
@@ -15,7 +12,6 @@ export default function Home() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <CartProvider>
       <main>
         <Hero />
         <CategoryNav categorias={categorias} />
@@ -28,10 +24,7 @@ export default function Home() {
           />
         ))}
         <Footer />
-        <FloatingWhatsAppButton />
-        <CartBar />
       </main>
-      </CartProvider>
     </MotionConfig>
   );
 }

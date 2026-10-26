@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Dancing_Script } from "next/font/google";
+import { Dancing_Script, Nunito } from "next/font/google";
 import "./globals.css";
 
 const dancingScript = Dancing_Script({
   variable: "--font-dancing-script",
+  subsets: ["latin"],
+});
+
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
 });
 
@@ -14,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${dancingScript.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${dancingScript.variable} ${nunito.variable} h-full antialiased`}>
       <body className="min-h-full">{children}</body>
     </html>
   );
