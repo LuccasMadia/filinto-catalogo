@@ -215,6 +215,26 @@ export function CatalogoPdf({ categorias, produtos }: CatalogoPdfProps) {
   );
 }
 
+// react-pdf não tem filtro de cor: converte a foto em preto e branco no canvas (PNG mantém a transparência).
+async function emPretoEBranco(src: string): Promise<string> {
+  const img = new window.Image();
+  img.crossOrigin = "anonymous";
+  img.src = absoluta(src);
+  await img.decode();
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext("2d")!;
+  ctx.filter = "grayscale(1)";
+  ctx.drawImage(img, 0, 0);
+  return canvas.toDataURL("image/png");
+}
+
 export async function buildCatalogoPdfBlob(dados: CatalogoPdfProps): Promise<Blob> {
-  return pdf(<CatalogoPdf {...dados} />).toBlob();
+  const produtos = await Promise.all(
+    dados.produtos.map(async (p) =>
+      p.esgotado && p.imagem ? { ...p, imagem: await emPretoEBranco(p.imagem).catch(() => p.imagem) } : p
+    )
+  );
+  return pdf(<CatalogoPdf {...dados} produtos={produtos} />).toBlob();
 }
