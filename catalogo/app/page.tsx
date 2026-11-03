@@ -1,30 +1,10 @@
-"use client";
+import { CatalogoHome } from "@/components/CatalogoHome";
+import { apenasVisiveis, getCatalogoOuPadrao } from "@/lib/catalogo-db";
 
-import { MotionConfig } from "framer-motion";
-import { Hero } from "@/components/Hero";
-import { CategoryNav } from "@/components/CategoryNav";
-import { CategorySection } from "@/components/CategorySection";
-import { Footer } from "@/components/Footer";
-import { useCatalogStore } from "@/lib/useCatalogStore";
+// Lê o banco a cada request para que edições do admin apareçam no reload seguinte.
+export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const { categorias, produtos } = useCatalogStore();
-
-  return (
-    <MotionConfig reducedMotion="user">
-      <main>
-        <Hero />
-        <CategoryNav categorias={categorias} />
-        {categorias.map((categoria) => (
-          <CategorySection
-            key={categoria.id}
-            id={categoria.id}
-            titulo={categoria.nome}
-            produtos={produtos.filter((p) => p.categoriaId === categoria.id)}
-          />
-        ))}
-        <Footer />
-      </main>
-    </MotionConfig>
-  );
+export default async function Home() {
+  const catalogo = apenasVisiveis(await getCatalogoOuPadrao());
+  return <CatalogoHome {...catalogo} />;
 }
