@@ -23,7 +23,7 @@ export type CatalogoState = {
   produtos: Produto[];
 };
 
-// Enquanto não há foto de cada sabor, todos usam o pote genérico (public/produtos/pote.png).
+// Produtos sem foto própria usam o pote genérico (public/produtos/pote.png).
 const IMAGEM_PADRAO = "/produtos/pote.png";
 
 const CATALOGO_BASE: CatalogoState = {
@@ -38,15 +38,15 @@ const CATALOGO_BASE: CatalogoState = {
     { id: "acai", nome: "Açaí" },
   ],
   produtos: [
-    { id: "pote18-abacaxi", categoriaId: "pote-1-8l", nome: "Pote de Abacaxi 1,8L", imagem: "/produtos/pote18-abacaxi.jpg", esgotado: true },
-    { id: "pote18-morango", categoriaId: "pote-1-8l", nome: "Pote de Morango 1,8L", imagem: "/produtos/pote18-napolitano.jpg", esgotado: true },
-    { id: "pote18-creme", categoriaId: "pote-1-8l", nome: "Pote de Creme 1,8L", imagem: "/produtos/pote18-flocos.jpg" },
-    { id: "pote18-flocos", categoriaId: "pote-1-8l", nome: "Pote de Flocos 1,8L", imagem: "/produtos/pote18-flocos.jpg" },
-    { id: "pote18-milho", categoriaId: "pote-1-8l", nome: "Pote de Milho 1,8L", imagem: "/produtos/pote18-abacaxi.jpg" },
-    { id: "pote18-chocomenta", categoriaId: "pote-1-8l", nome: "Pote de Chocomenta 1,8L", imagem: "/produtos/pote18-flocos.jpg" },
-    { id: "pote18-napolitano", categoriaId: "pote-1-8l", nome: "Pote Napolitano 1,8L", imagem: "/produtos/pote18-napolitano.jpg" },
-    { id: "pote18-coco-branco", categoriaId: "pote-1-8l", nome: "Pote de Coco Branco 1,8L", imagem: "/produtos/pote18-flocos.jpg" },
-    { id: "pote18-chocolate", categoriaId: "pote-1-8l", nome: "Pote de Chocolate 1,8L", imagem: "/produtos/pote18-napolitano.jpg" },
+    { id: "pote18-abacaxi", categoriaId: "pote-1-8l", nome: "Abacaxi 1,8L", imagem: "/produtos/pote18-abacaxi.webp" },
+    { id: "pote18-morango", categoriaId: "pote-1-8l", nome: "Morango 1,8L", imagem: "/produtos/pote18-morango.webp" },
+    { id: "pote18-creme", categoriaId: "pote-1-8l", nome: "Creme 1,8L", imagem: "/produtos/pote18-creme.webp" },
+    { id: "pote18-flocos", categoriaId: "pote-1-8l", nome: "Flocos 1,8L", imagem: "/produtos/pote18-flocos.webp" },
+    { id: "pote18-milho", categoriaId: "pote-1-8l", nome: "Milho Verde 1,8L", imagem: "/produtos/pote18-milho-verde.webp" },
+    { id: "pote18-chocomenta", categoriaId: "pote-1-8l", nome: "Chocomenta 1,8L", imagem: "/produtos/pote18-chocomenta.webp" },
+    { id: "pote18-napolitano", categoriaId: "pote-1-8l", nome: "Napolitano 1,8L", imagem: "/produtos/pote18-napolitano.webp" },
+    { id: "pote18-coco-branco", categoriaId: "pote-1-8l", nome: "Coco Branco 1,8L", imagem: "/produtos/pote18-coco-branco.webp" },
+    { id: "pote18-chocolate", categoriaId: "pote-1-8l", nome: "Chocolate 1,8L", imagem: "/produtos/pote18-chocolate-2l.webp" },
     { id: "potepremium18-ninho-morango", categoriaId: "pote-premium-1-8l", nome: "Pote Premium Ninho com Morango 1,8L" },
     { id: "potepremium18-ninho-trufado", categoriaId: "pote-premium-1-8l", nome: "Pote Premium Ninho Trufado 1,8L" },
     { id: "potepremium18-leitinho-especial", categoriaId: "pote-premium-1-8l", nome: "Pote Premium Leitinho Especial 1,8L" },
@@ -221,7 +221,7 @@ const CATALOGO_BASE: CatalogoState = {
 
 export const DEFAULT_CATALOGO: CatalogoState = {
   ...CATALOGO_BASE,
-  produtos: CATALOGO_BASE.produtos.map((p) => ({ ...p, imagem: IMAGEM_PADRAO })),
+  produtos: CATALOGO_BASE.produtos.map((p) => ({ ...p, imagem: p.imagem ?? IMAGEM_PADRAO })),
 };
 
 export function addCategoria(state: CatalogoState, nome: string): CatalogoState {

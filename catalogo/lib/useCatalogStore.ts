@@ -15,7 +15,7 @@ import {
   moveProduto as moveProdutoPura,
 } from "./catalogo-store";
 
-const STORAGE_KEY = "filinto-catalogo-v3";
+const STORAGE_KEY = "filinto-catalogo-v9";
 
 export function useCatalogStore() {
   const [state, setState] = useState<CatalogoState>(DEFAULT_CATALOGO);
