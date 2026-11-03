@@ -1,32 +1,21 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { useCatalogStore } from "@/lib/useCatalogStore";
+import { useState } from "react";
+import type { CatalogoState } from "@/lib/catalogo-store";
+import { apenasVisiveis } from "@/lib/catalogo-db";
 import { logout } from "@/app/admin/login/actions";
 import { AdminCategoriaCard } from "./AdminCategoriaCard";
 
-export function AdminPanel() {
-  const store = useCatalogStore();
-  const [novaCategoria, setNovaCategoria] = useState("");
+export function AdminPanel({ categorias, produtos }: CatalogoState) {
   const [exportando, setExportando] = useState(false);
   const [erroPdf, setErroPdf] = useState(false);
-
-  function handleAddCategoria(event: FormEvent) {
-    event.preventDefault();
-    if (!novaCategoria.trim()) return;
-    store.addCategoria(novaCategoria.trim());
-    setNovaCategoria("");
-  }
 
   async function handleExportarPdf() {
     setExportando(true);
     setErroPdf(false);
     try {
       const { buildCatalogoPdfBlob } = await import("@/lib/pdf/catalogo-pdf");
-      const blob = await buildCatalogoPdfBlob({
-        categorias: store.categorias,
-        produtos: store.produtos,
-      });
+      const blob = await buildCatalogoPdfBlob(apenasVisiveis({ categorias, produtos }));
       const url = URL.createObjectURL(blob);
       const data = new Date().toISOString().slice(0, 10);
       const link = document.createElement("a");
@@ -72,34 +61,12 @@ export function AdminPanel() {
           Não foi possível gerar o PDF. Tente novamente.
         </p>
       ) : null}
-      <p className="mb-4 text-sm text-neutral-600">
-        As edições ficam salvas só neste navegador.
-      </p>
-
-      <form onSubmit={handleAddCategoria} className="mb-6 flex gap-2">
-        <input
-          value={novaCategoria}
-          onChange={(e) => setNovaCategoria(e.target.value)}
-          placeholder="Nova categoria"
-          className="flex-1 rounded-lg border border-neutral-300 px-3 py-2"
-        />
-        <button
-          type="submit"
-          className="rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white"
-        >
-          Adicionar
-        </button>
-      </form>
-
       <div className="flex flex-col gap-6">
-        {store.categorias.map((categoria, index) => (
+        {categorias.map((categoria) => (
           <AdminCategoriaCard
             key={categoria.id}
-            store={store}
             categoria={categoria}
-            produtos={store.produtos.filter((p) => p.categoriaId === categoria.id)}
-            isFirst={index === 0}
-            isLast={index === store.categorias.length - 1}
+            produtos={produtos.filter((p) => p.categoriaId === categoria.id)}
           />
         ))}
       </div>

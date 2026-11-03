@@ -1,110 +1,61 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useTransition } from "react";
 import Image from "next/image";
 import type { Categoria, Produto } from "@/lib/catalogo-store";
-import type { CatalogStore } from "@/lib/useCatalogStore";
+import { setCategoriaOculta, setProdutoEsgotado } from "@/lib/catalogo-actions";
 import { AdminProdutoModal } from "./AdminProdutoModal";
 
 type AdminCategoriaCardProps = {
-  store: CatalogStore;
   categoria: Categoria;
   produtos: Produto[];
-  isFirst: boolean;
-  isLast: boolean;
 };
 
-export function AdminCategoriaCard({
-  store,
-  categoria,
-  produtos,
-  isFirst,
-  isLast,
-}: AdminCategoriaCardProps) {
-  const [renaming, setRenaming] = useState(false);
-  const [nome, setNome] = useState(categoria.nome);
+export function AdminCategoriaCard({ categoria, produtos }: AdminCategoriaCardProps) {
   const [editando, setEditando] = useState<Produto | null>(null);
-  const [criandoProduto, setCriandoProduto] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
-  function handleRenameSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (!nome.trim()) return;
-    store.renameCategoria(categoria.id, nome.trim());
-    setRenaming(false);
-  }
-
-  function handleRemoveCategoria() {
-    const confirmado = confirm(
-      `Excluir "${categoria.nome}"? Isso remove também os ${produtos.length} produto(s) dessa categoria.`
-    );
-    if (confirmado) {
-      store.removeCategoria(categoria.id);
-    }
+  // Uma única transição por card: desabilita todos os botões enquanto grava.
+  function executar(acao: () => Promise<{ error?: string }>) {
+    setErro(null);
+    startTransition(async () => {
+      const res = await acao();
+      if (res.error) setErro(res.error);
+    });
   }
 
   return (
     <section className="rounded-2xl border border-neutral-200 p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        {renaming ? (
-          <form onSubmit={handleRenameSubmit} className="flex flex-1 gap-2">
-            <input
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              className="flex-1 rounded-lg border border-neutral-300 px-2 py-1"
-              autoFocus
-            />
-            <button type="submit" className="text-sm font-medium text-brand">
-              Salvar
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setRenaming(false);
-                setNome(categoria.nome);
-              }}
-              className="text-sm text-neutral-500"
-            >
-              Cancelar
-            </button>
-          </form>
-        ) : (
-          <h2 className="font-[family-name:var(--font-dancing-script)] text-2xl text-brand">
-            {categoria.nome}
-          </h2>
-        )}
-
+        <h2 className="font-[family-name:var(--font-dancing-script)] text-2xl text-brand">
+          {categoria.nome}
+          {categoria.oculta ? (
+            <span className="ml-2 rounded-full bg-neutral-200 px-2 py-0.5 align-middle font-sans text-xs text-neutral-600">
+              Oculta
+            </span>
+          ) : null}
+        </h2>
         <div className="flex flex-wrap items-center justify-end gap-x-3 text-sm text-neutral-600 [&_button]:min-h-10 [&_button]:px-1">
           <button
             type="button"
-            disabled={isFirst}
-            onClick={() => store.moveCategoria(categoria.id, "up")}
-            className="disabled:opacity-30"
-            aria-label="Mover categoria para cima"
+            disabled={pending}
+            onClick={() => executar(() => setCategoriaOculta(categoria.id, !categoria.oculta))}
+            className="disabled:opacity-50"
           >
-            ↑
-          </button>
-          <button
-            type="button"
-            disabled={isLast}
-            onClick={() => store.moveCategoria(categoria.id, "down")}
-            className="disabled:opacity-30"
-            aria-label="Mover categoria para baixo"
-          >
-            ↓
-          </button>
-          {!renaming && (
-            <button type="button" onClick={() => setRenaming(true)}>
-              Renomear
-            </button>
-          )}
-          <button type="button" onClick={handleRemoveCategoria} className="text-red-600">
-            Excluir
+            {categoria.oculta ? "Mostrar categoria" : "Ocultar categoria"}
           </button>
         </div>
       </div>
 
+      {erro ? (
+        <p role="alert" className="mb-2 text-sm text-red-700">
+          {erro}
+        </p>
+      ) : null}
+
       <ul className="flex flex-col gap-2">
-        {produtos.map((produto, index) => (
+        {produtos.map((produto) => (
           <li
             key={produto.id}
             className="flex items-center justify-between gap-2 rounded-lg border border-neutral-100 px-3 py-2"
@@ -129,81 +80,26 @@ export function AdminCategoriaCard({
             <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm [&_button]:min-h-10 [&_button]:px-1">
               <button
                 type="button"
-                disabled={index === 0}
-                onClick={() => store.moveProduto(produto.id, "up")}
-                className="disabled:opacity-30"
-                aria-label="Mover produto para cima"
-              >
-                ↑
-              </button>
-              <button
-                type="button"
-                disabled={index === produtos.length - 1}
-                onClick={() => store.moveProduto(produto.id, "down")}
-                className="disabled:opacity-30"
-                aria-label="Mover produto para baixo"
-              >
-                ↓
-              </button>
-              <button
-                type="button"
-                onClick={() => store.updateProduto(produto.id, { esgotado: !produto.esgotado })}
+                disabled={pending}
+                onClick={() => executar(() => setProdutoEsgotado(produto.id, !produto.esgotado))}
+                className="disabled:opacity-50"
               >
                 {produto.esgotado ? "Marcar disponível" : "Marcar esgotado"}
               </button>
               <button
                 type="button"
+                disabled={pending}
                 onClick={() => setEditando(produto)}
-                className="text-brand"
+                className="text-brand disabled:opacity-50"
               >
                 Editar
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (confirm(`Excluir "${produto.nome}"?`)) {
-                    store.removeProduto(produto.id);
-                  }
-                }}
-                className="text-red-600"
-              >
-                Excluir
               </button>
             </div>
           </li>
         ))}
       </ul>
 
-      <button
-        type="button"
-        onClick={() => setCriandoProduto(true)}
-        className="mt-3 w-full rounded-lg border border-dashed border-neutral-300 px-3 py-2 text-sm text-neutral-600"
-      >
-        + Adicionar produto
-      </button>
-
-      {criandoProduto && (
-        <AdminProdutoModal
-          categoriaId={categoria.id}
-          onClose={() => setCriandoProduto(false)}
-          onSubmit={(novo) => {
-            store.addProduto(novo);
-            setCriandoProduto(false);
-          }}
-        />
-      )}
-
-      {editando && (
-        <AdminProdutoModal
-          categoriaId={categoria.id}
-          produto={editando}
-          onClose={() => setEditando(null)}
-          onSubmit={(changes) => {
-            store.updateProduto(editando.id, changes);
-            setEditando(null);
-          }}
-        />
-      )}
+      {editando && <AdminProdutoModal produto={editando} onClose={() => setEditando(null)} />}
     </section>
   );
 }
