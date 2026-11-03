@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Banco de dados (Supabase)
+
+Variáveis de ambiente (em `.env.local` e na Vercel):
+
+- `NEXT_PUBLIC_SUPABASE_URL`: endereço base do projeto, sem `/rest/v1/` (ex.: `https://xxxx.supabase.co`)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`: usada só no servidor (Server Actions); nunca expor no navegador nem usar prefixo `NEXT_PUBLIC_`
+
+Criar as tabelas: copie o conteúdo de `supabase/schema.sql` e rode no SQL Editor do Supabase.
+
+Popular com o catálogo inicial: `npx tsx --env-file=.env.local scripts/seed.ts`. Pode rodar de novo sem medo, nunca apaga dados.
