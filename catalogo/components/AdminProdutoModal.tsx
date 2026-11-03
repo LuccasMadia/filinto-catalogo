@@ -15,10 +15,10 @@ export function AdminProdutoModal({ produto, onClose }: AdminProdutoModalProps) 
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && !pending && onClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, pending]);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -27,9 +27,13 @@ export function AdminProdutoModal({ produto, onClose }: AdminProdutoModalProps) 
       return;
     }
     startTransition(async () => {
-      const res = await setProdutoNome(produto.id, nome.trim());
-      if (res.error) setErro(res.error);
-      else onClose();
+      try {
+        const res = await setProdutoNome(produto.id, nome.trim());
+        if (res.error) setErro(res.error);
+        else onClose();
+      } catch {
+        setErro("Não foi possível salvar. Recarregue a página e entre de novo.");
+      }
     });
   }
 
@@ -53,7 +57,7 @@ export function AdminProdutoModal({ produto, onClose }: AdminProdutoModalProps) 
             />
           </label>
           {erro ? (
-            <p role="alert" className="text-sm text-red-600">
+            <p role="alert" className="text-sm text-red-700">
               {erro}
             </p>
           ) : null}
@@ -61,7 +65,8 @@ export function AdminProdutoModal({ produto, onClose }: AdminProdutoModalProps) 
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg px-3 py-2 text-sm text-neutral-600"
+              disabled={pending}
+              className="rounded-lg px-3 py-2 text-sm text-neutral-600 disabled:opacity-60"
             >
               Cancelar
             </button>

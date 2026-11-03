@@ -217,3 +217,9 @@ export const DEFAULT_CATALOGO: CatalogoState = {
   ...CATALOGO_BASE,
   produtos: CATALOGO_BASE.produtos.map((p) => ({ ...p, imagem: p.imagem ?? IMAGEM_PADRAO })),
 };
+
+export function apenasVisiveis(state: CatalogoState): CatalogoState {
+  const categorias = state.categorias.filter((c) => !c.oculta);
+  const ids = new Set(categorias.map((c) => c.id));
+  return { categorias, produtos: state.produtos.filter((p) => ids.has(p.categoriaId)) };
+}

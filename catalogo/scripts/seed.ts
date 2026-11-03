@@ -20,9 +20,9 @@ async function main() {
     ordem: i,
   }));
 
-  const rc = await db.from("categorias").upsert(categorias);
+  const rc = await db.from("categorias").upsert(categorias, { ignoreDuplicates: true });
   if (rc.error) throw rc.error;
-  const rp = await db.from("produtos").upsert(produtos);
+  const rp = await db.from("produtos").upsert(produtos, { ignoreDuplicates: true });
   if (rp.error) throw rp.error;
 
   console.log(`${categorias.length} categorias, ${produtos.length} produtos`);

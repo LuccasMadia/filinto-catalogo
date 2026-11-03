@@ -1,5 +1,6 @@
 import { CatalogoHome } from "@/components/CatalogoHome";
-import { apenasVisiveis, getCatalogoOuPadrao } from "@/lib/catalogo-db";
+import { getCatalogoOuPadrao } from "@/lib/catalogo-db";
+import { apenasVisiveis } from "@/lib/catalogo-store";
 
 // Lê o banco a cada request para que edições do admin apareçam no reload seguinte.
 export const dynamic = "force-dynamic";

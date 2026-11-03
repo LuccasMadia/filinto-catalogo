@@ -45,4 +45,4 @@ Variáveis de ambiente (em `.env.local` e na Vercel):
 
 Criar as tabelas: copie o conteúdo de `supabase/schema.sql` e rode no SQL Editor do Supabase.
 
-Popular com o catálogo inicial: `npx tsx --env-file=.env.local scripts/seed.ts`. Pode rodar de novo sem medo, nunca apaga dados.
+Popular com o catálogo inicial: `npx tsx --env-file=.env.local scripts/seed.ts`. Pode rodar de novo sem medo: só adiciona o que estiver faltando, nunca sobrescreve nem apaga as edições do cliente (nome, esgotado, oculta).

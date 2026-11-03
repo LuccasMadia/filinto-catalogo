@@ -20,8 +20,12 @@ export function AdminCategoriaCard({ categoria, produtos }: AdminCategoriaCardPr
   function executar(acao: () => Promise<{ error?: string }>) {
     setErro(null);
     startTransition(async () => {
-      const res = await acao();
-      if (res.error) setErro(res.error);
+      try {
+        const res = await acao();
+        if (res.error) setErro(res.error);
+      } catch {
+        setErro("Não foi possível salvar. Recarregue a página e entre de novo.");
+      }
     });
   }
 
@@ -40,6 +44,7 @@ export function AdminCategoriaCard({ categoria, produtos }: AdminCategoriaCardPr
           <button
             type="button"
             disabled={pending}
+            aria-label={`${categoria.oculta ? "Mostrar" : "Ocultar"} ${categoria.nome}`}
             onClick={() => executar(() => setCategoriaOculta(categoria.id, !categoria.oculta))}
             className="disabled:opacity-50"
           >
@@ -81,6 +86,7 @@ export function AdminCategoriaCard({ categoria, produtos }: AdminCategoriaCardPr
               <button
                 type="button"
                 disabled={pending}
+                aria-label={`Marcar ${produto.nome} como ${produto.esgotado ? "disponível" : "esgotado"}`}
                 onClick={() => executar(() => setProdutoEsgotado(produto.id, !produto.esgotado))}
                 className="disabled:opacity-50"
               >
@@ -89,6 +95,7 @@ export function AdminCategoriaCard({ categoria, produtos }: AdminCategoriaCardPr
               <button
                 type="button"
                 disabled={pending}
+                aria-label={`Editar ${produto.nome}`}
                 onClick={() => setEditando(produto)}
                 className="text-brand disabled:opacity-50"
               >

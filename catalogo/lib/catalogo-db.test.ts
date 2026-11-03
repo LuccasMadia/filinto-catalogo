@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { DEFAULT_CATALOGO } from "./catalogo-store";
-import { montarCatalogo, apenasVisiveis, getCatalogoOuPadrao } from "./catalogo-db";
+import { DEFAULT_CATALOGO, apenasVisiveis } from "./catalogo-store";
+import { montarCatalogo, getCatalogoOuPadrao } from "./catalogo-db";
 
 const cats = [
   { id: "b", nome: "B", ordem: 2, oculta: true },

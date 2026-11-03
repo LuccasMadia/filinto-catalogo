@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { CatalogoState } from "@/lib/catalogo-store";
-import { apenasVisiveis } from "@/lib/catalogo-db";
+import { apenasVisiveis } from "@/lib/catalogo-store";
 import { logout } from "@/app/admin/login/actions";
 import { AdminCategoriaCard } from "./AdminCategoriaCard";
 

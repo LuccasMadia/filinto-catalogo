@@ -42,13 +42,8 @@ export async function getCatalogoOuPadrao(
   try {
     const state = await ler();
     return state.categorias.length ? state : DEFAULT_CATALOGO;
-  } catch {
+  } catch (erro) {
+    console.error(erro);
     return DEFAULT_CATALOGO;
   }
-}
-
-export function apenasVisiveis(state: CatalogoState): CatalogoState {
-  const categorias = state.categorias.filter((c) => !c.oculta);
-  const ids = new Set(categorias.map((c) => c.id));
-  return { categorias, produtos: state.produtos.filter((p) => ids.has(p.categoriaId)) };
 }
