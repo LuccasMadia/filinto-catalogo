@@ -1,6 +1,7 @@
 export type Categoria = {
   id: string;
   nome: string;
+  oculta?: boolean;
 };
 
 export type Produto = {
