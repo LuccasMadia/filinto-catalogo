@@ -11,6 +11,7 @@ import type { CatalogoState } from "@/lib/catalogo-store";
 const CATEGORIAS_EM_LISTA: Record<string, { imagem?: string; largura?: number; altura?: number }> = {
   picoles: { imagem: "/produtos/picoles.webp", largura: 900, altura: 593 },
   caixa: { imagem: "/produtos/caixa.webp", largura: 600, altura: 600 },
+  sundaes: { imagem: "/produtos/sundaes.webp", largura: 900, altura: 813 },
 };
 
 export function CatalogoHome({ categorias, produtos }: CatalogoState) {
