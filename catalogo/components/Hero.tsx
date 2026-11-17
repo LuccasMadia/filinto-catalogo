@@ -9,7 +9,7 @@ const HOLD_UNTIL_MS = 2000;
 const TROCA_MS = 5000;
 
 // Um fundo por slide: vermelho Filinto, chocolate e morango.
-const FUNDOS = ["#AC1214", "#6B3A0A", "#EFA0BC"];
+const FUNDOS = ["#AC1214", "#6B3A0A", "#F3DFC1"];
 
 function Casquinha({ className }: { className: string }) {
   return (
