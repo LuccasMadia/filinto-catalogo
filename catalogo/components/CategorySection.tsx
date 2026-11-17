@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Produto } from "@/lib/catalogo-store";
+import Image from "next/image";
 import { ProductCard } from "./ProductCard";
 
 const LINHAS_INICIAIS = 2;
@@ -36,9 +37,10 @@ type CategorySectionProps = {
   id: string;
   titulo: string;
   produtos: Produto[];
+  banner?: string;
 };
 
-export function CategorySection({ id, titulo, produtos }: CategorySectionProps) {
+export function CategorySection({ id, titulo, produtos, banner }: CategorySectionProps) {
   const colunas = useColunasGrid();
   const [linhasVisiveis, setLinhasVisiveis] = useState(LINHAS_INICIAIS);
   const [mostrarTudo, setMostrarTudo] = useState(false);
@@ -51,7 +53,23 @@ export function CategorySection({ id, titulo, produtos }: CategorySectionProps) 
 
   return (
     <section id={id} className="mx-auto max-w-5xl scroll-mt-14 px-4 py-10">
-      <h2 className="mb-6 font-[family-name:var(--font-dancing-script)] text-4xl text-brand">
+      {banner ? (
+        <Image
+          src={banner}
+          alt=""
+          width={1600}
+          height={600}
+          sizes="(min-width: 1024px) 1024px, 100vw"
+          className="mb-6 h-auto w-full rounded-2xl"
+        />
+      ) : null}
+      <h2
+        className={
+          banner
+            ? "sr-only"
+            : "mb-6 font-[family-name:var(--font-dancing-script)] text-4xl text-brand"
+        }
+      >
         {titulo}
       </h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
