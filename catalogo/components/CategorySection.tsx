@@ -38,7 +38,7 @@ type CategorySectionProps = {
   id: string;
   titulo: string;
   produtos: Produto[];
-  lista?: { imagem?: string };
+  lista?: { imagem?: string; largura?: number; altura?: number };
 };
 
 export function CategorySection({ id, titulo, produtos, lista }: CategorySectionProps) {
@@ -61,7 +61,13 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
         <div className="flex items-center gap-5 sm:gap-8">
         <div className="w-36 shrink-0 sm:w-72">
           {lista.imagem ? (
-            <Image src={lista.imagem} alt="" width={600} height={600} className="h-auto w-full" />
+            <Image
+              src={lista.imagem}
+              alt=""
+              width={lista.largura ?? 600}
+              height={lista.altura ?? 600}
+              className="h-auto w-full"
+            />
           ) : (
             <ProductImagePlaceholder nome={titulo} />
           )}
