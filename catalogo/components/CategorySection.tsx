@@ -56,7 +56,7 @@ export function CategorySection({ id, titulo, produtos, lista, imagemADireita }:
         <div
           className={`flex items-center gap-5 sm:gap-8 ${imagemADireita ? "flex-row-reverse" : ""}`}
         >
-        <div className="w-36 shrink-0 sm:w-72">
+        <div className="w-32 shrink-0 sm:w-60">
           {lista.imagem ? (
             <Image
               src={lista.imagem}
