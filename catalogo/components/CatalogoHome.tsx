@@ -15,6 +15,14 @@ const CATEGORIAS_EM_LISTA: Record<string, { imagem?: string; largura?: number; a
 };
 
 export function CatalogoHome({ categorias, produtos }: CatalogoState) {
+  // Nas categorias em lista a imagem alterna: esquerda na primeira, direita na segunda, e assim por diante.
+  const imagemADireita: Record<string, boolean> = {};
+  categorias
+    .filter((c) => CATEGORIAS_EM_LISTA[c.id])
+    .forEach((c, i) => {
+      imagemADireita[c.id] = i % 2 === 1;
+    });
+
   return (
     <MotionConfig reducedMotion="user">
       <main>
@@ -25,6 +33,7 @@ export function CatalogoHome({ categorias, produtos }: CatalogoState) {
             key={categoria.id}
             id={categoria.id}
             lista={CATEGORIAS_EM_LISTA[categoria.id]}
+            imagemADireita={imagemADireita[categoria.id]}
             titulo={categoria.nome}
             produtos={produtos.filter((p) => p.categoriaId === categoria.id)}
           />

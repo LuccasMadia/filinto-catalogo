@@ -31,10 +31,11 @@ type CategorySectionProps = {
   id: string;
   titulo: string;
   produtos: Produto[];
+  imagemADireita?: boolean;
   lista?: { imagem?: string; largura?: number; altura?: number };
 };
 
-export function CategorySection({ id, titulo, produtos, lista }: CategorySectionProps) {
+export function CategorySection({ id, titulo, produtos, lista, imagemADireita }: CategorySectionProps) {
   const gradeRef = useRef<HTMLDivElement>(null);
   const colunas = useColunasGrid(gradeRef);
   const [linhasVisiveis, setLinhasVisiveis] = useState(LINHAS_INICIAIS);
@@ -52,7 +53,9 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
         {titulo}
       </h2>
       {lista ? (
-        <div className="flex items-center gap-5 sm:gap-8">
+        <div
+          className={`flex items-center gap-5 sm:gap-8 ${imagemADireita ? "flex-row-reverse" : ""}`}
+        >
         <div className="w-36 shrink-0 sm:w-72">
           {lista.imagem ? (
             <Image
