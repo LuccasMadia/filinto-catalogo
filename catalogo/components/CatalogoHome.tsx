@@ -7,8 +7,11 @@ import { CategorySection } from "@/components/CategorySection";
 import { Footer } from "@/components/Footer";
 import type { CatalogoState } from "@/lib/catalogo-store";
 
-// Categorias mostradas só como lista de nomes, sem fotos.
-const CATEGORIAS_EM_LISTA = new Set(["picoles"]);
+// Categorias mostradas como lista de nomes ao lado de uma imagem única (placeholder se não houver).
+const CATEGORIAS_EM_LISTA: Record<string, { imagem?: string }> = {
+  picoles: {},
+  caixa: { imagem: "/produtos/caixa.webp" },
+};
 
 export function CatalogoHome({ categorias, produtos }: CatalogoState) {
   return (
@@ -20,7 +23,7 @@ export function CatalogoHome({ categorias, produtos }: CatalogoState) {
           <CategorySection
             key={categoria.id}
             id={categoria.id}
-            lista={CATEGORIAS_EM_LISTA.has(categoria.id)}
+            lista={CATEGORIAS_EM_LISTA[categoria.id]}
             titulo={categoria.nome}
             produtos={produtos.filter((p) => p.categoriaId === categoria.id)}
           />

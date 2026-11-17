@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Produto } from "@/lib/catalogo-store";
+import Image from "next/image";
 import { ProductCard } from "./ProductCard";
 import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 
@@ -37,7 +38,7 @@ type CategorySectionProps = {
   id: string;
   titulo: string;
   produtos: Produto[];
-  lista?: boolean;
+  lista?: { imagem?: string };
 };
 
 export function CategorySection({ id, titulo, produtos, lista }: CategorySectionProps) {
@@ -59,7 +60,11 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
       {lista ? (
         <div className="flex items-center gap-5 sm:gap-8">
         <div className="w-36 shrink-0 sm:w-72">
-          <ProductImagePlaceholder nome={titulo} />
+          {lista.imagem ? (
+            <Image src={lista.imagem} alt="" width={600} height={600} className="h-auto w-full" />
+          ) : (
+            <ProductImagePlaceholder nome={titulo} />
+          )}
         </div>
         <ul className="grid flex-1 gap-x-8 gap-y-3 sm:grid-cols-2">
           {produtos.map((produto) => (
