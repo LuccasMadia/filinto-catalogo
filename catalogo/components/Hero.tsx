@@ -8,19 +8,12 @@ import { WHATSAPP } from "@/lib/contato";
 const HOLD_UNTIL_MS = 2000;
 const TROCA_MS = 5000;
 
-// Um fundo por slide (vermelho Filinto, chocolate, morango); a casquinha abaixo é ilustração fictícia.
+// Um fundo por slide: vermelho Filinto, chocolate e morango.
 const FUNDOS = ["#AC1214", "#6B3A0A", "#EFA0BC"];
 
-// Casquinha de ilustração FICTÍCIA: substituir por <Image> com a foto real quando o cliente enviar.
 function Casquinha({ className }: { className: string }) {
   return (
-    <svg viewBox="0 0 120 240" aria-hidden="true" className={className}>
-      <path d="M30 108h60L60 236z" fill="#E8A23B" />
-      <path d="M45 128l30 0M52 148h16M40 112l32 110M80 112L48 222" stroke="#C97F1E" strokeWidth="2.5" />
-      <path d="M22 100c0-16 16-26 38-26s38 10 38 26c0 6-4 10-8 10l-6 14c-1 3-5 3-6 0l-4-10-6 14c-1 3-5 3-6 0l-4-12-8 12c-2 3-6 2-6-1l-1-14c-6 0-9-4-9-9z" fill="#FBEBB5" />
-      <path d="M26 66c0-26 15-44 34-44s34 18 34 44c0 4-3 8-6 8l-4 14c-1 3-5 3-6 0l-3-10-6 12c-1 3-5 3-6 0l-3-12-8 14c-2 3-6 2-6-1l-1-15c-5 0-9-3-9-9z" fill="#F2A0B5" />
-      <ellipse cx="44" cy="42" rx="7" ry="13" fill="#fff" opacity=".35" transform="rotate(20 44 42)" />
-    </svg>
+    <Image src="/hero-sorvete.png" alt="" width={543} height={724} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />
   );
 }
 
