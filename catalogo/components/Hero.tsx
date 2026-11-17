@@ -8,27 +8,30 @@ import { WHATSAPP } from "@/lib/contato";
 const HOLD_UNTIL_MS = 2000;
 
 
-// Cada casquinha é um botão: clicar nela troca o fundo para a cor do sabor.
+// Roleta: [esquerda, meio, direita]. Clicar numa casquinha lateral a traz para o meio e o fundo ganha a cor do sabor.
 const SABORES = {
   chocolate: { fundo: "#6B3A0A", foto: "/hero-chocolate.webp", nome: "chocolate" },
   morango: { fundo: "#AC1214", foto: "/hero-morango.webp", nome: "morango" },
   baunilha: { fundo: "#F3DFC1", foto: "/hero-baunilha.webp", nome: "baunilha" },
 };
 type Sabor = keyof typeof SABORES;
+const POSICOES = [
+  { x: "-70%", y: "4%", scale: 0.6, rotate: -6 },
+  { x: "0%", y: "0%", scale: 1, rotate: 0 },
+  { x: "70%", y: "4%", scale: 0.6, rotate: 6 },
+];
 
-function Casquinha({ sabor, className, onEscolher }: { sabor: Sabor; className: string; onEscolher: (s: Sabor) => void }) {
-  const { foto, nome } = SABORES[sabor];
-  return (
-    <button type="button" aria-label={`Fundo ${nome}`} onClick={() => onEscolher(sabor)} className="transition active:scale-95">
-      <Image src={foto} alt="" width={540} height={900} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />
-    </button>
-  );
+function girar(ordem: Sabor[], posicao: number): Sabor[] {
+  // Esquerda: tudo gira para a direita; direita: tudo gira para a esquerda.
+  if (posicao === 0) return [ordem[2], ordem[0], ordem[1]];
+  if (posicao === 2) return [ordem[1], ordem[2], ordem[0]];
+  return ordem;
 }
 
 export function Hero() {
   const [phase, setPhase] = useState<"intro" | "done">("intro");
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [sabor, setSabor] = useState<Sabor>("morango");
+  const [ordem, setOrdem] = useState<Sabor[]>(["chocolate", "morango", "baunilha"]);
 
   useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -66,7 +69,7 @@ export function Hero() {
 
   return (
     <header
-      style={{ backgroundColor: SABORES[sabor].fundo }}
+      style={{ backgroundColor: SABORES[ordem[1]].fundo }}
       className="relative flex min-h-svh flex-col items-center overflow-hidden transition-colors duration-700"
     >
       <Image src="/logo-filinto.png" alt="Filinto Sorvetes" width={72} height={72} className="absolute left-4 top-4 z-10 h-14 w-14 rounded-full sm:h-[72px] sm:w-[72px]" />
@@ -77,10 +80,26 @@ export function Hero() {
         transition={{ type: "spring", stiffness: 70, damping: 13 }}
         className="absolute bottom-[28%] z-0 flex w-full justify-center"
       >
-        <div className="flex items-end justify-center gap-[3vw] sm:gap-10">
-          <Casquinha sabor="chocolate" onEscolher={setSabor} className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
-          <Casquinha sabor="morango" onEscolher={setSabor} className="h-[48svh] max-h-[32rem]" />
-          <Casquinha sabor="baunilha" onEscolher={setSabor} className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
+        <div className="relative h-[min(48svh,80vw)] max-h-[32rem] w-full">
+          {(Object.keys(SABORES) as Sabor[]).map((sabor) => {
+            const posicao = ordem.indexOf(sabor);
+            return (
+              <div key={sabor} className="absolute bottom-0 left-1/2 flex h-full w-0 justify-center" style={{ zIndex: posicao === 1 ? 1 : 0 }}>
+                <motion.button
+                  type="button"
+                  aria-label={`Fundo ${SABORES[sabor].nome}`}
+                  onClick={() => setOrdem((o) => girar(o, posicao))}
+                  initial={false}
+                  animate={POSICOES[posicao]}
+                  transition={{ type: "spring", stiffness: 120, damping: 16 }}
+                  style={{ transformOrigin: "50% 100%" }}
+                  className="h-full"
+                >
+                  <Image src={SABORES[sabor].foto} alt="" width={540} height={900} sizes="(min-width: 640px) 360px, 45vw" className="h-full w-auto max-w-none" />
+                </motion.button>
+              </div>
+            );
+          })}
         </div>
       </motion.div>
 
