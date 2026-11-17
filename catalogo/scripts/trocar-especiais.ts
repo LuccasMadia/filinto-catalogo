@@ -1,13 +1,13 @@
-// Uso: npx tsx --env-file=.env.local scripts/trocar-paletas.ts
-// Troca as paletas antigas (sabores fictícios) pelas reais do DEFAULT_CATALOGO.
+// Uso: npx tsx --env-file=.env.local scripts/trocar-especiais.ts
+// Troca as especiais antigos (sabores fictícios) pelos reais do DEFAULT_CATALOGO.
 import { DEFAULT_CATALOGO } from "../lib/catalogo-store";
 import { createServiceClient } from "../lib/supabase";
 
 async function main() {
   const db = createServiceClient();
-  const novas = DEFAULT_CATALOGO.produtos.filter((p) => p.categoriaId === "paleta-mexicana");
-  const base = DEFAULT_CATALOGO.produtos.findIndex((p) => p.categoriaId === "paleta-mexicana");
-  const del = await db.from("produtos").delete().eq("categoria_id", "paleta-mexicana");
+  const novas = DEFAULT_CATALOGO.produtos.filter((p) => p.categoriaId === "picoles-especiais");
+  const base = DEFAULT_CATALOGO.produtos.findIndex((p) => p.categoriaId === "picoles-especiais");
+  const del = await db.from("produtos").delete().eq("categoria_id", "picoles-especiais");
   if (del.error) throw del.error;
   const ins = await db.from("produtos").insert(
     novas.map((p, i) => ({
@@ -20,6 +20,6 @@ async function main() {
     })),
   );
   if (ins.error) throw ins.error;
-  console.log(`${novas.length} paletas`);
+  console.log(`${novas.length} especiais`);
 }
 main().catch((e) => { console.error(e); process.exit(1); });
