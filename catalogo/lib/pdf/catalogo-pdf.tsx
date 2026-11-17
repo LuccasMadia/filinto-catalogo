@@ -182,7 +182,7 @@ export function CatalogoPdf({ categorias, produtos }: CatalogoPdfProps) {
         <Svg viewBox="0 0 430 430" style={styles.capaCirculo}>
           <Circle cx={215} cy={215} r={215} fill="#C42224" />
         </Svg>
-        <Image src={absoluta("/produtos/pote.png")} style={styles.capaPote} />
+        <Image src={absoluta("/capa-pote.png")} style={styles.capaPote} />
         <Link src={WHATSAPP.link} style={styles.capaWhats}>
           <Text style={styles.capaWhatsTitulo}>Peça pelo WhatsApp</Text>
           <Text style={styles.capaWhatsNumero}>{WHATSAPP.texto}</Text>
@@ -215,25 +215,29 @@ export function CatalogoPdf({ categorias, produtos }: CatalogoPdfProps) {
   );
 }
 
-// react-pdf não tem filtro de cor: converte a foto em preto e branco no canvas (PNG mantém a transparência).
-async function emPretoEBranco(src: string): Promise<string> {
+// react-pdf só lê PNG e JPG (não WebP, formato das fotos) e não tem filtro de cor: redesenha a foto
+// no canvas, reduzida, e devolve PNG (mantém a transparência). Esgotado sai em preto e branco.
+const LADO_MAX = 500;
+
+async function paraPng(src: string, cinza: boolean): Promise<string> {
   const img = new window.Image();
   img.crossOrigin = "anonymous";
   img.src = absoluta(src);
   await img.decode();
+  const escala = Math.min(1, LADO_MAX / Math.max(img.naturalWidth, img.naturalHeight));
   const canvas = document.createElement("canvas");
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
+  canvas.width = Math.round(img.naturalWidth * escala);
+  canvas.height = Math.round(img.naturalHeight * escala);
   const ctx = canvas.getContext("2d")!;
-  ctx.filter = "grayscale(1)";
-  ctx.drawImage(img, 0, 0);
+  if (cinza) ctx.filter = "grayscale(1)";
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   return canvas.toDataURL("image/png");
 }
 
 export async function buildCatalogoPdfBlob(dados: CatalogoPdfProps): Promise<Blob> {
   const produtos = await Promise.all(
     dados.produtos.map(async (p) =>
-      p.esgotado && p.imagem ? { ...p, imagem: await emPretoEBranco(p.imagem).catch(() => p.imagem) } : p
+      p.imagem ? { ...p, imagem: await paraPng(p.imagem, !!p.esgotado) } : p
     )
   );
   return pdf(<CatalogoPdf {...dados} produtos={produtos} />).toBlob();
