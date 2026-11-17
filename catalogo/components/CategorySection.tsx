@@ -78,7 +78,7 @@ export function CategorySection({ id, titulo, produtos, banner, lista }: Categor
           {produtos.map((produto) => (
             <li
               key={produto.id}
-              className={`border-b border-neutral-200 pb-2 font-semibold ${
+              className={`font-semibold ${
                 produto.esgotado ? "text-neutral-400 line-through" : "text-neutral-900"
               }`}
             >
