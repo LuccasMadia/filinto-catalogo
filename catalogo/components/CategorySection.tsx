@@ -66,7 +66,7 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
               alt=""
               width={lista.largura ?? 600}
               height={lista.altura ?? 600}
-              className="h-auto w-full"
+              className="h-auto w-full transition duration-500 ease-out hover:scale-105"
             />
           ) : (
             <ProductImagePlaceholder nome={titulo} />
