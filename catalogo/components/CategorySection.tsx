@@ -41,7 +41,13 @@ type CategorySectionProps = {
   lista?: boolean;
 };
 
-export function CategorySection({ id, titulo, produtos, banner, lista }: CategorySectionProps) {
+export function CategorySection({
+  id,
+  titulo,
+  produtos,
+  banner,
+  lista,
+}: CategorySectionProps) {
   const colunas = useColunasGrid();
   const [linhasVisiveis, setLinhasVisiveis] = useState(LINHAS_INICIAIS);
   const [mostrarTudo, setMostrarTudo] = useState(false);
@@ -53,72 +59,85 @@ export function CategorySection({ id, titulo, produtos, banner, lista }: Categor
   const temMaisProdutos = !mostrarTudo && quantidadeVisivel < produtos.length;
 
   return (
-    <section id={id} className="mx-auto max-w-5xl scroll-mt-14 px-4 py-10">
+    <section id={id} className="scroll-mt-14">
       {banner ? (
         <Image
           src={banner}
           alt=""
           width={1600}
           height={600}
-          sizes="(min-width: 1024px) 1024px, 100vw"
-          className="mb-6 h-auto w-full rounded-2xl"
+          sizes="100vw"
+          className="mt-10 h-auto w-full"
         />
       ) : null}
-      <h2
-        className={
-          banner
-            ? "sr-only"
-            : "mb-6 font-[family-name:var(--font-dancing-script)] text-4xl text-brand"
-        }
-      >
-        {titulo}
-      </h2>
-      {lista ? (
-        <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-          {produtos.map((produto) => (
-            <li
-              key={produto.id}
-              className={`font-semibold ${
-                produto.esgotado ? "text-neutral-400 line-through" : "text-neutral-900"
-              }`}
-            >
-              <span aria-hidden="true" className="mr-2 text-brand no-underline">
-                •
-              </span>
-              {produto.nome}
-              {produto.esgotado ? (
-                <span className="ml-2 text-xs font-bold uppercase tracking-widest no-underline">
-                  Esgotado
+      <div className="mx-auto max-w-5xl px-4 py-10">
+        <h2
+          className={
+            banner
+              ? "sr-only"
+              : "mb-6 font-[family-name:var(--font-dancing-script)] text-4xl text-brand"
+          }
+        >
+          {titulo}
+        </h2>
+        {lista ? (
+          <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+            {produtos.map((produto) => (
+              <li
+                key={produto.id}
+                className={`font-semibold ${
+                  produto.esgotado
+                    ? "text-neutral-400 line-through"
+                    : "text-neutral-900"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="mr-2 text-brand no-underline"
+                >
+                  •
                 </span>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {produtosVisiveis.map((produto, index) => (
-            <ProductCard key={produto.id} produto={produto} atraso={(index % colunas) * 0.05} />
-          ))}
-        </div>
-      )}
-      {temMaisProdutos && !lista ? (
-        <div className="mt-6 flex justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => setLinhasVisiveis((linhas) => linhas + LINHAS_POR_CLIQUE)}
-            className="rounded-full border border-brand px-5 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
-          >
-            Ver mais produtos
-          </button>
-          <button
-            type="button"
-            onClick={() => setMostrarTudo(true)}
-            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
-          >
-            Mostrar todos ({produtos.length})
-          </button>
-        </div>
-      ) : null}
+                {produto.nome}
+                {produto.esgotado ? (
+                  <span className="ml-2 text-xs font-bold uppercase tracking-widest no-underline">
+                    Esgotado
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {produtosVisiveis.map((produto, index) => (
+              <ProductCard
+                key={produto.id}
+                produto={produto}
+                atraso={(index % colunas) * 0.05}
+              />
+            ))}
+          </div>
+        )}
+        {temMaisProdutos && !lista ? (
+          <div className="mt-6 flex justify-center gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                setLinhasVisiveis((linhas) => linhas + LINHAS_POR_CLIQUE)
+              }
+              className="rounded-full border border-brand px-5 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+            >
+              Ver mais produtos
+            </button>
+            <button
+              type="button"
+              onClick={() => setMostrarTudo(true)}
+              className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
+            >
+              Mostrar todos ({produtos.length})
+            </button>
+          </div>
+        ) : null}
+      </div>
     </section>
   );
 }
