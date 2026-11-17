@@ -57,7 +57,7 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
         {titulo}
       </h2>
       {lista ? (
-        <div className="flex items-start gap-5 sm:gap-8">
+        <div className="flex items-center gap-5 sm:gap-8">
         <div className="w-36 shrink-0 sm:w-72">
           <ProductImagePlaceholder nome={titulo} />
         </div>
