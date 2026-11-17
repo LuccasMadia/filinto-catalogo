@@ -21,7 +21,7 @@ export function ProductCard({ produto, atraso = 0 }: { produto: Produto; atraso?
             alt={produto.nome}
             fill
             sizes="(min-width: 1024px) 240px, (min-width: 640px) 30vw, 45vw"
-            className="object-contain transition duration-500 ease-out group-hover:scale-105"
+            className="object-contain transition duration-500 ease-out group-hover:scale-110"
           />
         </div>
       ) : (
