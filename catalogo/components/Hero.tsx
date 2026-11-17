@@ -8,12 +8,8 @@ import { WHATSAPP } from "@/lib/contato";
 const HOLD_UNTIL_MS = 2000;
 const TROCA_MS = 5000;
 
-// Cada slide: cor de fundo + foto da casquinha (public/hero-<sabor>.webp).
-const SLIDES = [
-  { fundo: "#AC1214", foto: "/hero-morango.webp" },
-  { fundo: "#6B3A0A", foto: "/hero-chocolate.webp" },
-  { fundo: "#F3DFC1", foto: "/hero-baunilha.webp" },
-];
+// Fundos que se alternam atrás das casquinhas: vermelho Filinto, chocolate e creme.
+const SLIDES = [{ fundo: "#AC1214" }, { fundo: "#6B3A0A" }, { fundo: "#F3DFC1" }];
 
 function Casquinha({ src, className }: { src: string; className: string }) {
   return <Image src={src} alt="" width={540} height={900} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />;
@@ -77,16 +73,11 @@ export function Hero() {
         transition={{ type: "spring", stiffness: 70, damping: 13 }}
         className="absolute bottom-[28%] z-0 flex w-full justify-center"
       >
-        {SLIDES.map(({ foto }, i) => (
-          <div
-            key={foto}
-            className={`absolute inset-x-0 bottom-0 flex items-end justify-center gap-[3vw] transition-opacity duration-700 sm:gap-10 ${i === slide ? "opacity-100" : "opacity-0"}`}
-          >
-            <Casquinha src={foto} className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
-            <Casquinha src={foto} className="h-[48svh] max-h-[32rem]" />
-            <Casquinha src={foto} className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
-          </div>
-        ))}
+        <div className="flex items-end justify-center gap-[3vw] sm:gap-10">
+          <Casquinha src="/hero-chocolate.webp" className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
+          <Casquinha src="/hero-morango.webp" className="h-[48svh] max-h-[32rem]" />
+          <Casquinha src="/hero-baunilha.webp" className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
+        </div>
       </motion.div>
 
       <div className="absolute bottom-0 left-1/2 z-10 flex h-[36%] w-[150%] -translate-x-1/2 flex-col items-center justify-center rounded-t-[50%] bg-background px-6 pt-6 text-center shadow-[0_-8px_24px_rgba(0,0,0,0.12)]">
