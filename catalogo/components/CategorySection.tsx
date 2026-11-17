@@ -74,17 +74,25 @@ export function CategorySection({ id, titulo, produtos, banner, lista }: Categor
         {titulo}
       </h2>
       {lista ? (
-        <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {produtos.map((produto) => (
             <li
               key={produto.id}
-              className={`border-b border-neutral-200 pb-2 font-semibold ${
-                produto.esgotado ? "text-neutral-400 line-through" : "text-neutral-900"
+              className={`flex items-center gap-3 rounded-full border px-5 py-3 font-semibold shadow-sm transition duration-300 ${
+                produto.esgotado
+                  ? "border-neutral-200 bg-neutral-100 text-neutral-400"
+                  : "border-brand/20 bg-white text-brand hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
               }`}
             >
-              {produto.nome}
+              <span
+                aria-hidden
+                className={`size-2.5 shrink-0 rounded-full ${
+                  produto.esgotado ? "bg-neutral-300" : "bg-brand"
+                }`}
+              />
+              <span className={produto.esgotado ? "line-through" : undefined}>{produto.nome}</span>
               {produto.esgotado ? (
-                <span className="ml-2 text-xs font-bold uppercase tracking-widest no-underline">
+                <span className="ml-auto text-xs font-bold uppercase tracking-widest">
                   Esgotado
                 </span>
               ) : null}
