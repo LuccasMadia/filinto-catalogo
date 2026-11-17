@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajuste do PDF</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px system-ui, sans-serif; background: #2a2a2a; color: #eee; display: flex; gap: 24px; padding: 16px; align-items: flex-start; }
+  .paginas { display: flex; gap: 24px; }
+  .moldura { width: calc(595px * 1.2); height: calc(842px * 1.2); overflow: hidden; position: relative; box-shadow: 0 4px 24px #0008; }
+  .folha { width: 595px; height: 842px; transform: scale(1.2); transform-origin: 0 0; position: relative; overflow: hidden; }
+  .capa { background: #AC1214; color: #fff; }
+  .prod { background: #FFF8F0 url(fundos/1.jpg) center / 595px 842px no-repeat; }
+  .el { position: absolute; cursor: move; user-select: none; touch-action: none; outline: 1px dashed transparent; }
+  .el:hover { outline-color: #4af; }
+  .el.sel { outline: 2px solid #4af; }
+  .alca { position: absolute; right: -7px; bottom: -7px; width: 14px; height: 14px; background: #4af; border: 2px solid #fff; border-radius: 3px; cursor: nwse-resize; }
+  h3 { margin: 0 0 8px; font-weight: 600; }
+  .lateral { width: 300px; position: sticky; top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .box { background: #3a3a3a; border-radius: 8px; padding: 12px; }
+  label { display: flex; justify-content: space-between; align-items: center; margin: 6px 0; }
+  input[type=number] { width: 90px; padding: 4px; }
+  textarea { width: 100%; height: 190px; font: 12px monospace; background: #222; color: #9f9; border: 0; border-radius: 6px; padding: 8px; }
+  button { padding: 8px 12px; border: 0; border-radius: 6px; cursor: pointer; background: #4af; color: #012; font-weight: 600; }
+  button.sec { background: #555; color: #eee; }
+  .nome { position: relative; text-align: center; font-family: "Lilita One", sans-serif; color: #fff; line-height: 1.25; letter-spacing: .4px;
+    -webkit-text-stroke: 3.6px #000; paint-order: stroke fill; }
+  .titulo { font-family: "Dancing Script", cursive; color: #AC1214; text-align: center; white-space: nowrap; }
+  .t-capa { font-family: "Dancing Script", cursive; white-space: nowrap; line-height: 1.2; }
+  .data { font: 11px Arial, sans-serif; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+  .dica { color: #aaa; font-size: 12px; line-height: 1.4; }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap">
+</head>
+<body>
+<div class="paginas">
+  <div><h3>Capa</h3><div class="moldura"><div class="folha capa" id="capa"></div></div></div>
+  <div><h3>Página de produtos</h3><div class="moldura"><div class="folha prod" id="prod"></div></div></div>
+</div>
+
+<div class="lateral">
+  <div class="box">
+    <h3 id="selNome">Clique num elemento</h3>
+    <div id="campos" class="dica">Arraste para mover. Os valores aparecem aqui e podem ser digitados. Medidas em pt (A4 = 595 × 842).</div>
+  </div>
+  <div class="box">
+    <h3>Medidas atuais</h3>
+    <textarea id="saida" readonly></textarea>
+    <div style="display:flex; gap:8px; margin-top:8px">
+      <button id="copiar">Copiar</button>
+      <button id="resetar" class="sec">Voltar ao padrão</button>
+    </div>
+    <p class="dica">Copie e cole no chat para eu aplicar no PDF. As medidas ficam salvas neste navegador.</p>
+  </div>
+</div>
+
+<script>
+const S = 1.2;
+const PADRAO = {
+  capa: { logo: { x: 21.2, y: 15.8, w: 138.3 }, texto: { x: 207, y: 59.8, fs: 48.5 } },
+  prod: { titulo: { y: 28, fs: 48 }, grade: { y: 120, col: 163, gx: 17, gy: 10, pote: 150, fs: 16 } },
+};
+const ROTULOS = {
+  "capa.logo": ["Logo", { x: "X", y: "Y", w: "Largura" }, "xy", (o, f) => { o.w *= f; }],
+  "capa.texto": ["Texto da capa", { x: "X", y: "Y", fs: "Fonte do título" }, "xy", (o, f) => { o.fs *= f; }],
+  "prod.titulo": ["Título da categoria", { y: "Y", fs: "Fonte" }, "y", (o, f) => { o.fs *= f; }],
+  "prod.grade": ["Grade de produtos", { y: "Y (topo)", col: "Largura da coluna", gx: "Vão entre colunas", gy: "Vão entre linhas", pote: "Altura do pote", fs: "Fonte do nome" }, "y", (o, f) => { o.col *= f; o.pote *= f; o.fs *= f; o.gx *= f; }],
+};
+const NOMES = ["Pote de Abacaxi 1,8L", "Pote de Morango 1,8L", "Pote de Creme 1,8L", "Pote de Flocos 1,8L", "Pote de Milho 1,8L", "Pote de Chocomenta 1,8L", "Pote Napolitano 1,8L", "Pote de Coco Branco 1,8L", "Pote de Chocolate 1,8L"];
+
+let estado;
+try { estado = JSON.parse(localStorage.getItem("ajuste-pdf")) || null; } catch { estado = null; }
+if (!estado) estado = JSON.parse(JSON.stringify(PADRAO));
+let sel = null;
+
+const get = (k) => k.split(".").reduce((o, p) => o[p], estado);
+const salvar = () => { try { localStorage.setItem("ajuste-pdf", JSON.stringify(estado)); } catch {} };
+
+function el(html, k) {
+  const d = document.createElement("div");
+  d.className = "el" + (sel === k ? " sel" : "");
+  d.dataset.k = k;
+  d.innerHTML = html;
+  if (sel === k) d.insertAdjacentHTML("beforeend", "<div class=alca></div>");
+  return d;
+}
+
+function desenhar(manterCampos) {
+  const capa = document.getElementById("capa"), prod = document.getElementById("prod");
+  capa.innerHTML = prod.innerHTML = "";
+
+  const { logo, texto } = estado.capa;
+  const l = el(`<img src="logo-filinto-capa.png" style="width:${logo.w}px;display:block;pointer-events:none">`, "capa.logo");
+  l.style.left = logo.x + "px"; l.style.top = logo.y + "px"; capa.append(l);
+  const t = el(`<div class="t-capa" style="font-size:${texto.fs}px">Catálogo de produtos</div><div class="data">Outubro de 2026</div>`, "capa.texto");
+  t.style.left = texto.x + "px"; t.style.top = texto.y + "px"; capa.append(t);
+
+  const { titulo, grade } = estado.prod;
+  const ti = el(`<div class="titulo" style="font-size:${titulo.fs}px">Pote 1,8L</div>`, "prod.titulo");
+  ti.style.left = "0"; ti.style.width = "595px"; ti.style.top = titulo.y + "px"; prod.append(ti);
+
+  const larg = 3 * grade.col + 2 * grade.gx;
+  const cel = (n) => `<div style="width:${grade.col}px"><img src="produtos/pote.png" style="width:100%;height:${grade.pote}px;object-fit:contain;display:block;pointer-events:none"><div class="nome" style="font-size:${grade.fs}px;margin-top:6px">${n}</div></div>`;
+  const g = el(`<div style="display:grid;grid-template-columns:repeat(3,${grade.col}px);column-gap:${grade.gx}px;row-gap:${grade.gy}px">${NOMES.map(cel).join("")}</div>`, "prod.grade");
+  g.style.left = (595 - larg) / 2 + "px"; g.style.top = grade.y + "px"; prod.append(g);
+
+  document.getElementById("saida").value = JSON.stringify(estado, (k, v) => (typeof v === "number" ? Math.round(v * 10) / 10 : v), 2);
+  if (!manterCampos) campos();
+}
+
+function campos() {
+  const box = document.getElementById("campos");
+  if (!sel) return;
+  const [nome, props] = ROTULOS[sel];
+  document.getElementById("selNome").textContent = nome;
+  box.className = "";
+  box.innerHTML = Object.entries(props).map(([p, r]) => `<label>${r}<input type="number" step="1" data-p="${p}" value="${Math.round(get(sel)[p])}"></label>`).join("");
+  box.querySelectorAll("input").forEach((i) => i.addEventListener("input", () => {
+    get(sel)[i.dataset.p] = Number(i.value) || 0; salvar(); desenhar(true);
+  }));
+}
+
+let arrasto = null;
+document.addEventListener("pointerdown", (e) => {
+  const d = e.target.closest(".el");
+  if (!d) return;
+  sel = d.dataset.k; arrasto = { k: sel, x: e.clientX, y: e.clientY, redim: e.target.classList.contains("alca") };
+  e.preventDefault(); desenhar();
+});
+document.addEventListener("pointermove", (e) => {
+  if (!arrasto) return;
+  if (!e.buttons) { arrasto = null; return; } // soltou fora da janela: encerra o arrasto
+  const o = get(arrasto.k), eixos = ROTULOS[arrasto.k][2];
+  const dx = (e.clientX - arrasto.x) / S, dy = (e.clientY - arrasto.y) / S;
+  arrasto.x = e.clientX; arrasto.y = e.clientY;
+  if (arrasto.redim) {
+    const largura = document.querySelector(`[data-k="${arrasto.k}"]`).offsetWidth;
+    ROTULOS[arrasto.k][3](o, Math.max(0.2, 1 + dx / largura));
+    salvar(); desenhar();
+    return;
+  }
+  if (eixos.includes("x")) o.x += dx;
+  o.y += dy;
+  salvar(); desenhar();
+});
+document.addEventListener("pointerup", () => { arrasto = null; });
+
+document.getElementById("copiar").onclick = () => navigator.clipboard.writeText(document.getElementById("saida").value);
+document.getElementById("resetar").onclick = () => { estado = JSON.parse(JSON.stringify(PADRAO)); salvar(); desenhar(); };
+desenhar();
+</script>
+</body>
+</html>

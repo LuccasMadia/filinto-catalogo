@@ -17,9 +17,6 @@ export type CatalogoState = {
   produtos: Produto[];
 };
 
-// Produtos sem foto própria usam o pote genérico (public/produtos/pote.png).
-const IMAGEM_PADRAO = "/produtos/pote.png";
-
 const CATALOGO_BASE: CatalogoState = {
   categorias: [
     { id: "pote-1-8l", nome: "Pote 1,8L" },
@@ -208,15 +205,12 @@ const CATALOGO_BASE: CatalogoState = {
       categoriaId: "paleta-mexicana",
       nome: "Paleta Mexicana de Framboesa",
     },
-    { id: "acai-pote-1l", categoriaId: "acai", nome: "Açaí Pote 1L", imagem: "/produtos/acai.jpg" },
-    { id: "acai-caixa-10l", categoriaId: "acai", nome: "Açaí Caixa 10L", imagem: "/produtos/acai.jpg" },
+    { id: "acai-pote-1l", categoriaId: "acai", nome: "Açaí Pote 1L" },
+    { id: "acai-caixa-10l", categoriaId: "acai", nome: "Açaí Caixa 10L" },
   ],
 };
 
-export const DEFAULT_CATALOGO: CatalogoState = {
-  ...CATALOGO_BASE,
-  produtos: CATALOGO_BASE.produtos.map((p) => ({ ...p, imagem: p.imagem ?? IMAGEM_PADRAO })),
-};
+export const DEFAULT_CATALOGO: CatalogoState = CATALOGO_BASE;
 
 export function apenasVisiveis(state: CatalogoState): CatalogoState {
   const categorias = state.categorias.filter((c) => !c.oculta);
