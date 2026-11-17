@@ -3,24 +3,34 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { HeroNav } from "./HeroNav";
-import { HeroDripEdge } from "./HeroDripEdge";
-import { HeroQuadro } from "./HeroQuadro";
-import type { Categoria } from "@/lib/catalogo-store";
 import { WHATSAPP } from "@/lib/contato";
 
 const HOLD_UNTIL_MS = 2000;
+const TROCA_MS = 5000;
 
-export function Hero({ categorias }: { categorias: Categoria[] }) {
+// Um fundo por slide (vermelho Filinto, chocolate, morango); a casquinha abaixo é ilustração fictícia.
+const FUNDOS = ["#AC1214", "#6B3A0A", "#EFA0BC"];
+
+// Casquinha de ilustração FICTÍCIA: substituir por <Image> com a foto real quando o cliente enviar.
+function Casquinha({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 120 240" aria-hidden="true" className={className}>
+      <path d="M30 108h60L60 236z" fill="#E8A23B" />
+      <path d="M45 128l30 0M52 148h16M40 112l32 110M80 112L48 222" stroke="#C97F1E" strokeWidth="2.5" />
+      <path d="M22 100c0-16 16-26 38-26s38 10 38 26c0 6-4 10-8 10l-6 14c-1 3-5 3-6 0l-4-10-6 14c-1 3-5 3-6 0l-4-12-8 12c-2 3-6 2-6-1l-1-14c-6 0-9-4-9-9z" fill="#FBEBB5" />
+      <path d="M26 66c0-26 15-44 34-44s34 18 34 44c0 4-3 8-6 8l-4 14c-1 3-5 3-6 0l-3-10-6 12c-1 3-5 3-6 0l-3-12-8 14c-2 3-6 2-6-1l-1-15c-5 0-9-3-9-9z" fill="#F2A0B5" />
+      <ellipse cx="44" cy="42" rx="7" ry="13" fill="#fff" opacity=".35" transform="rotate(20 44 42)" />
+    </svg>
+  );
+}
+
+export function Hero() {
   const [phase, setPhase] = useState<"intro" | "done">("intro");
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [slide, setSlide] = useState(0);
 
   useLayoutEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setReducedMotion(true);
       setPhase("done");
     }
@@ -28,129 +38,77 @@ export function Hero({ categorias }: { categorias: Categoria[] }) {
 
   useEffect(() => {
     if (phase !== "intro") return;
-
     document.body.style.overflow = "hidden";
     const timer = setTimeout(() => setPhase("done"), HOLD_UNTIL_MS);
     return () => clearTimeout(timer);
   }, [phase]);
 
   useEffect(() => {
-    if (phase === "done") {
-      document.body.style.overflow = "";
-    }
+    if (phase === "done") document.body.style.overflow = "";
   }, [phase]);
 
-  const isIntro = phase === "intro";
+  useEffect(() => {
+    if (phase !== "done" || reducedMotion) return;
+    const id = setInterval(() => setSlide((s) => (s + 1) % FUNDOS.length), TROCA_MS);
+    return () => clearInterval(id);
+  }, [phase, reducedMotion]);
+
+  if (phase === "intro") {
+    return (
+      // Sem fade inicial: o fundo vermelho do splash cobre o catálogo já no HTML do servidor.
+      <header className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#AC1214] px-4 text-center text-white">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className="h-[min(72vw,340px)] w-[min(72vw,340px)]"
+        >
+          <Image src="/logo-filinto.png" alt="Filinto Sorvetes" width={340} height={340} className="h-full w-full rounded-full" preload />
+        </motion.div>
+      </header>
+    );
+  }
 
   return (
-    <motion.header
-      layout
-      // Sem fade inicial: o fundo vermelho do splash precisa cobrir o catálogo já no HTML do servidor.
-      initial={false}
-      transition={{ layout: { duration: 0.5, ease: "easeInOut" } }}
-      className={
-        isIntro
-          ? "fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#AC1214] px-4 text-center text-white"
-          : "relative flex min-h-svh flex-col items-center justify-center gap-10 overflow-hidden bg-[radial-gradient(ellipse_at_70%_45%,#D01A1D_0%,#AC1214_45%,#7A0D0F_100%)] px-6 pt-24 pb-28 text-center text-white md:flex-row md:justify-between md:gap-12 md:px-16 md:text-left lg:px-24"
-      }
+    <header
+      style={{ backgroundColor: FUNDOS[slide] }}
+      className="relative flex min-h-svh flex-col items-center overflow-hidden transition-colors duration-700"
     >
-      {!isIntro && (
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="pointer-events-none absolute inset-0"
-        >
-          <motion.div
-            className="absolute inset-0"
-            initial={reducedMotion ? false : { scale: 1.08 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src="/fachada-desktop.jpg"
-              alt="Fachada da loja Filinto Sorvetes"
-              fill
-              sizes="100vw"
-              className="hidden object-cover object-[50%_65%] md:block"
-            />
-            <Image
-              src="/fachada-mobile.jpg"
-              alt="Fachada da loja Filinto Sorvetes"
-              fill
-              sizes="100vw"
-              className="object-cover object-[50%_70%] md:hidden"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(110,11,13,0.9),rgba(172,18,20,0.8))] md:bg-[linear-gradient(90deg,rgba(92,9,11,0.97)_0%,rgba(130,13,15,0.9)_48%,rgba(122,13,15,0.5)_100%)]" />
-          <HeroNav />
-          <HeroDripEdge />
-        </motion.div>
-      )}
+      <Image src="/logo-filinto.png" alt="Filinto Sorvetes" width={72} height={72} className="absolute left-4 top-4 z-10 h-14 w-14 rounded-full sm:h-[72px] sm:w-[72px]" />
+
       <motion.div
-        layout
-        initial={isIntro ? { opacity: 0, scale: 0.8 } : false}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{
-          default: { delay: isIntro ? 0.1 : 0, duration: 0.5 },
-          layout: { duration: 0.5, ease: "easeInOut" },
-        }}
-        className={
-          isIntro
-            ? "relative z-10 mx-auto h-[min(72vw,340px)] w-[min(72vw,340px)]"
-            : "absolute h-0 w-0 overflow-hidden opacity-0"
-        }
+        initial={reducedMotion ? false : { y: 60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 70, damping: 13 }}
+        className="absolute bottom-[28%] z-0 flex w-full items-end justify-center gap-[3vw] sm:gap-10"
       >
-        <Image
-          src="/logo-filinto.png"
-          alt="Filinto Sorvetes"
-          width={340}
-          height={340}
-          className="h-full w-full rounded-full"
-          preload
-        />
+        <Casquinha className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
+        <Casquinha className="h-[48svh] max-h-[32rem]" />
+        <Casquinha className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
       </motion.div>
-      <motion.div
-        initial={isIntro ? { opacity: 0 } : false}
-        animate={{ opacity: 1 }}
-        transition={{ delay: isIntro ? 0.7 : 0, duration: 0.3 }}
-        className={isIntro ? "hidden" : "relative z-10 md:flex-1"}
-      >
-        <h1
-          className={`font-[family-name:var(--font-dancing-script)] leading-none ${
-            isIntro ? "text-5xl sm:text-6xl" : "text-6xl sm:text-7xl lg:text-8xl"
-          }`}
-        >
+
+      <div className="absolute bottom-0 left-1/2 z-10 flex h-[36%] w-[150%] -translate-x-1/2 flex-col items-center justify-center rounded-t-[50%] bg-background px-6 pt-6 text-center shadow-[0_-8px_24px_rgba(0,0,0,0.12)]">
+        <h1 className="font-[family-name:var(--font-dancing-script)] text-5xl leading-none text-brand sm:text-6xl">
           Filinto Sorvetes
         </h1>
-        <p className={`mt-3 text-white/90 ${isIntro ? "" : "text-lg sm:text-xl"}`}>
-          O sabor que refresca o seu dia
-        </p>
-        {!isIntro && (
-          <motion.div
-            initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 flex flex-wrap items-center justify-center gap-3 md:justify-start"
+        <p className="mt-2 text-neutral-700">O sabor que refresca o seu dia</p>
+        <div className="mt-5 flex flex-wrap justify-center gap-3">
+          <a
+            href={WHATSAPP.link}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-12 items-center rounded-full bg-brand px-7 font-bold text-white shadow-md transition hover:bg-brand-dark active:scale-[0.97]"
           >
-            <a
-              href={WHATSAPP.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-12 items-center rounded-full bg-white px-7 text-base font-bold text-brand shadow-lg transition duration-200 hover:bg-neutral-100 active:scale-[0.97]"
-            >
-              Pedir no WhatsApp
-            </a>
-            <a
-              href="#cardapio"
-              className="inline-flex min-h-12 items-center rounded-full border-2 border-white/80 px-7 text-base font-bold text-white transition duration-200 hover:bg-white/15 active:scale-[0.97]"
-            >
-              Ver cardápio
-            </a>
-          </motion.div>
-        )}
-      </motion.div>
-      {!isIntro && <HeroQuadro categorias={categorias} reducedMotion={reducedMotion} />}
-    </motion.header>
+            Pedir no WhatsApp
+          </a>
+          <a
+            href="#cardapio"
+            className="inline-flex min-h-12 items-center rounded-full border-2 border-brand px-7 font-bold text-brand transition hover:bg-brand hover:text-white active:scale-[0.97]"
+          >
+            Ver cardápio
+          </a>
+        </div>
+      </div>
+    </header>
   );
 }

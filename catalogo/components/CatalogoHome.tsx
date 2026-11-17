@@ -26,7 +26,7 @@ export function CatalogoHome({ categorias, produtos }: CatalogoState) {
   return (
     <MotionConfig reducedMotion="user">
       <main>
-        <Hero categorias={categorias} />
+        <Hero />
         <CategoryNav categorias={categorias} />
         {categorias.map((categoria) => (
           <CategorySection
