@@ -38,9 +38,10 @@ type CategorySectionProps = {
   titulo: string;
   produtos: Produto[];
   banner?: string;
+  lista?: boolean;
 };
 
-export function CategorySection({ id, titulo, produtos, banner }: CategorySectionProps) {
+export function CategorySection({ id, titulo, produtos, banner, lista }: CategorySectionProps) {
   const colunas = useColunasGrid();
   const [linhasVisiveis, setLinhasVisiveis] = useState(LINHAS_INICIAIS);
   const [mostrarTudo, setMostrarTudo] = useState(false);
@@ -72,12 +73,32 @@ export function CategorySection({ id, titulo, produtos, banner }: CategorySectio
       >
         {titulo}
       </h2>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {produtosVisiveis.map((produto, index) => (
-          <ProductCard key={produto.id} produto={produto} atraso={(index % colunas) * 0.05} />
-        ))}
-      </div>
-      {temMaisProdutos ? (
+      {lista ? (
+        <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+          {produtos.map((produto) => (
+            <li
+              key={produto.id}
+              className={`border-b border-neutral-200 pb-2 font-semibold ${
+                produto.esgotado ? "text-neutral-400 line-through" : "text-neutral-900"
+              }`}
+            >
+              {produto.nome}
+              {produto.esgotado ? (
+                <span className="ml-2 text-xs font-bold uppercase tracking-widest no-underline">
+                  Esgotado
+                </span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {produtosVisiveis.map((produto, index) => (
+            <ProductCard key={produto.id} produto={produto} atraso={(index % colunas) * 0.05} />
+          ))}
+        </div>
+      )}
+      {temMaisProdutos && !lista ? (
         <div className="mt-6 flex justify-center gap-3">
           <button
             type="button"
