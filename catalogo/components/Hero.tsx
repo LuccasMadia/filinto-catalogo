@@ -8,13 +8,15 @@ import { WHATSAPP } from "@/lib/contato";
 const HOLD_UNTIL_MS = 2000;
 const TROCA_MS = 5000;
 
-// Um fundo por slide: vermelho Filinto, chocolate e morango.
-const FUNDOS = ["#AC1214", "#6B3A0A", "#F3DFC1"];
+// Cada slide: cor de fundo + foto da casquinha (public/hero-<sabor>.webp).
+const SLIDES = [
+  { fundo: "#AC1214", foto: "/hero-morango.webp" },
+  { fundo: "#6B3A0A", foto: "/hero-chocolate.webp" },
+  { fundo: "#F3DFC1", foto: "/hero-baunilha.webp" },
+];
 
-function Casquinha({ className }: { className: string }) {
-  return (
-    <Image src="/hero-sorvete.png" alt="" width={543} height={724} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />
-  );
+function Casquinha({ src, className }: { src: string; className: string }) {
+  return <Image src={src} alt="" width={540} height={900} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />;
 }
 
 export function Hero() {
@@ -42,7 +44,7 @@ export function Hero() {
 
   useEffect(() => {
     if (phase !== "done" || reducedMotion) return;
-    const id = setInterval(() => setSlide((s) => (s + 1) % FUNDOS.length), TROCA_MS);
+    const id = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), TROCA_MS);
     return () => clearInterval(id);
   }, [phase, reducedMotion]);
 
@@ -64,7 +66,7 @@ export function Hero() {
 
   return (
     <header
-      style={{ backgroundColor: FUNDOS[slide] }}
+      style={{ backgroundColor: SLIDES[slide].fundo }}
       className="relative flex min-h-svh flex-col items-center overflow-hidden transition-colors duration-700"
     >
       <Image src="/logo-filinto.png" alt="Filinto Sorvetes" width={72} height={72} className="absolute left-4 top-4 z-10 h-14 w-14 rounded-full sm:h-[72px] sm:w-[72px]" />
@@ -73,11 +75,18 @@ export function Hero() {
         initial={reducedMotion ? false : { y: 60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 70, damping: 13 }}
-        className="absolute bottom-[28%] z-0 flex w-full items-end justify-center gap-[3vw] sm:gap-10"
+        className="absolute bottom-[28%] z-0 flex w-full justify-center"
       >
-        <Casquinha className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
-        <Casquinha className="h-[48svh] max-h-[32rem]" />
-        <Casquinha className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
+        {SLIDES.map(({ foto }, i) => (
+          <div
+            key={foto}
+            className={`absolute inset-x-0 bottom-0 flex items-end justify-center gap-[3vw] transition-opacity duration-700 sm:gap-10 ${i === slide ? "opacity-100" : "opacity-0"}`}
+          >
+            <Casquinha src={foto} className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
+            <Casquinha src={foto} className="h-[48svh] max-h-[32rem]" />
+            <Casquinha src={foto} className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
+          </div>
+        ))}
       </motion.div>
 
       <div className="absolute bottom-0 left-1/2 z-10 flex h-[36%] w-[150%] -translate-x-1/2 flex-col items-center justify-center rounded-t-[50%] bg-background px-6 pt-6 text-center shadow-[0_-8px_24px_rgba(0,0,0,0.12)]">
