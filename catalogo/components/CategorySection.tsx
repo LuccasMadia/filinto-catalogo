@@ -58,7 +58,7 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
       </h2>
       {lista ? (
         <div className="flex items-start gap-5 sm:gap-8">
-        <div className="w-28 shrink-0 sm:w-56">
+        <div className="w-36 shrink-0 sm:w-72">
           <ProductImagePlaceholder nome={titulo} />
         </div>
         <ul className="grid flex-1 gap-x-8 gap-y-3 sm:grid-cols-2">
