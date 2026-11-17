@@ -6,19 +6,29 @@ import Image from "next/image";
 import { WHATSAPP } from "@/lib/contato";
 
 const HOLD_UNTIL_MS = 2000;
-const TROCA_MS = 5000;
 
-// Fundos que se alternam atrás das casquinhas: vermelho Filinto, chocolate e creme.
-const SLIDES = [{ fundo: "#AC1214" }, { fundo: "#6B3A0A" }, { fundo: "#F3DFC1" }];
 
-function Casquinha({ src, className }: { src: string; className: string }) {
-  return <Image src={src} alt="" width={540} height={900} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />;
+// Cada casquinha é um botão: clicar nela troca o fundo para a cor do sabor.
+const SABORES = {
+  chocolate: { fundo: "#6B3A0A", foto: "/hero-chocolate.webp", nome: "chocolate" },
+  morango: { fundo: "#AC1214", foto: "/hero-morango.webp", nome: "morango" },
+  baunilha: { fundo: "#F3DFC1", foto: "/hero-baunilha.webp", nome: "baunilha" },
+};
+type Sabor = keyof typeof SABORES;
+
+function Casquinha({ sabor, className, onEscolher }: { sabor: Sabor; className: string; onEscolher: (s: Sabor) => void }) {
+  const { foto, nome } = SABORES[sabor];
+  return (
+    <button type="button" aria-label={`Fundo ${nome}`} onClick={() => onEscolher(sabor)} className="transition active:scale-95">
+      <Image src={foto} alt="" width={540} height={900} sizes="(min-width: 640px) 360px, 45vw" className={`w-auto ${className}`} />
+    </button>
+  );
 }
 
 export function Hero() {
   const [phase, setPhase] = useState<"intro" | "done">("intro");
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [slide, setSlide] = useState(0);
+  const [sabor, setSabor] = useState<Sabor>("morango");
 
   useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -38,12 +48,6 @@ export function Hero() {
     if (phase === "done") document.body.style.overflow = "";
   }, [phase]);
 
-  useEffect(() => {
-    if (phase !== "done" || reducedMotion) return;
-    const id = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), TROCA_MS);
-    return () => clearInterval(id);
-  }, [phase, reducedMotion]);
-
   if (phase === "intro") {
     return (
       // Sem fade inicial: o fundo vermelho do splash cobre o catálogo já no HTML do servidor.
@@ -62,7 +66,7 @@ export function Hero() {
 
   return (
     <header
-      style={{ backgroundColor: SLIDES[slide].fundo }}
+      style={{ backgroundColor: SABORES[sabor].fundo }}
       className="relative flex min-h-svh flex-col items-center overflow-hidden transition-colors duration-700"
     >
       <Image src="/logo-filinto.png" alt="Filinto Sorvetes" width={72} height={72} className="absolute left-4 top-4 z-10 h-14 w-14 rounded-full sm:h-[72px] sm:w-[72px]" />
@@ -74,9 +78,9 @@ export function Hero() {
         className="absolute bottom-[28%] z-0 flex w-full justify-center"
       >
         <div className="flex items-end justify-center gap-[3vw] sm:gap-10">
-          <Casquinha src="/hero-chocolate.webp" className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
-          <Casquinha src="/hero-morango.webp" className="h-[48svh] max-h-[32rem]" />
-          <Casquinha src="/hero-baunilha.webp" className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
+          <Casquinha sabor="chocolate" onEscolher={setSabor} className="mb-[-2svh] h-[30svh] max-h-72 -rotate-6" />
+          <Casquinha sabor="morango" onEscolher={setSabor} className="h-[48svh] max-h-[32rem]" />
+          <Casquinha sabor="baunilha" onEscolher={setSabor} className="mb-[-2svh] h-[30svh] max-h-72 rotate-6" />
         </div>
       </motion.div>
 
