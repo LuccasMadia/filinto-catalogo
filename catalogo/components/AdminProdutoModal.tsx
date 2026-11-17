@@ -44,20 +44,21 @@ export function AdminProdutoModal({ produto, onClose }: AdminProdutoModalProps) 
       aria-label="Editar produto"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
     >
-      <div className="w-full max-w-sm rounded-2xl bg-white p-5">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl">
         <h3 className="mb-4 text-lg font-semibold text-neutral-900">Editar produto</h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <label className="text-sm text-neutral-700">
+          <label className="text-sm font-medium text-neutral-700">
             Nome
             <input
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2"
+              maxLength={80}
+              className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 font-normal text-neutral-900"
               autoFocus
             />
           </label>
           {erro ? (
-            <p role="alert" className="text-sm text-red-700">
+            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
               {erro}
             </p>
           ) : null}
@@ -66,14 +67,14 @@ export function AdminProdutoModal({ produto, onClose }: AdminProdutoModalProps) 
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="rounded-lg px-3 py-2 text-sm text-neutral-600 disabled:opacity-60"
+              className="min-h-10 rounded-lg px-3 text-sm text-neutral-600 transition hover:bg-neutral-100 disabled:opacity-60"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+              className="min-h-10 rounded-lg bg-brand px-4 text-sm font-medium text-white transition hover:bg-brand-dark disabled:opacity-60"
             >
               {pending ? "Salvando..." : "Salvar"}
             </button>

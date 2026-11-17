@@ -11,17 +11,19 @@ const TONS = [
 // Palavras de formato do produto; o sabor é o que sobra.
 const FORMATO = new Set(["pote", "picolé", "picole", "sundae", "caixa", "paleta", "de", "da", "do", "premium"]);
 
-export function ProductImagePlaceholder({ nome }: { nome: string }) {
+export function ProductImagePlaceholder({ nome, compacto = false }: { nome: string; compacto?: boolean }) {
   const sabor = nome.split(" ").find((w) => !FORMATO.has(w.toLowerCase())) ?? nome;
   const hash = [...sabor].reduce((acc, c) => acc + c.charCodeAt(0), 0);
   const tom = TONS[hash % TONS.length];
   return (
     <div
       aria-hidden="true"
-      className="flex aspect-square w-full items-center justify-center rounded-xl"
+      className={`flex aspect-square w-full items-center justify-center ${compacto ? "rounded-lg" : "rounded-xl"}`}
       style={{ backgroundColor: tom.bg, color: tom.fg }}
     >
-      <span className="font-[family-name:var(--font-dancing-script)] text-6xl leading-none">
+      <span
+        className={`font-[family-name:var(--font-dancing-script)] leading-none ${compacto ? "text-2xl" : "text-6xl"}`}
+      >
         {sabor.charAt(0).toUpperCase()}
       </span>
     </div>

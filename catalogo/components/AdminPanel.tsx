@@ -32,32 +32,45 @@ export function AdminPanel({ categorias, produtos }: CatalogoState) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-[family-name:var(--font-dancing-script)] text-3xl text-brand">
-          Painel Filinto
-        </h1>
+      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="font-[family-name:var(--font-dancing-script)] text-4xl leading-none text-brand">
+            Painel Filinto
+          </h1>
+          <p className="mt-1 text-sm text-neutral-600">
+            Marque o que está esgotado, corrija nomes e oculte categorias.
+          </p>
+        </div>
         <div className="flex flex-wrap gap-2">
+          <a
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-10 items-center rounded-lg border border-neutral-300 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+          >
+            Ver o site
+          </a>
           <button
             type="button"
             onClick={handleExportarPdf}
             disabled={exportando}
-            className="rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+            className="min-h-10 rounded-lg bg-brand px-3 text-sm font-medium text-white transition hover:bg-brand-dark disabled:opacity-60"
           >
             {exportando ? "Gerando..." : "Exportar PDF"}
           </button>
           <form action={logout}>
             <button
               type="submit"
-              className="rounded-lg border border-neutral-300 px-3 py-2 text-sm font-medium text-neutral-700"
+              className="min-h-10 rounded-lg border border-neutral-300 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
             >
               Sair
             </button>
           </form>
         </div>
-      </div>
+      </header>
 
       {erroPdf ? (
-        <p role="alert" className="mb-4 text-sm text-red-700">
+        <p role="alert" className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
           Não foi possível gerar o PDF. Tente novamente.
         </p>
       ) : null}
