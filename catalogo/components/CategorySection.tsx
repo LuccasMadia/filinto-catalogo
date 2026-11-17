@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Produto } from "@/lib/catalogo-store";
 import Image from "next/image";
 import { ProductCard } from "./ProductCard";
@@ -9,27 +9,20 @@ import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 const LINHAS_INICIAIS = 2;
 const LINHAS_POR_CLIQUE = 2;
 
-function useColunasGrid() {
+// A grade se ajusta sozinha à largura (auto-fill); aqui só lemos quantas colunas ela formou.
+function useColunasGrid(ref: RefObject<HTMLElement | null>) {
   const [colunas, setColunas] = useState(2);
 
   useEffect(() => {
-    const mqSm = window.matchMedia("(min-width: 640px)");
-    const mqLg = window.matchMedia("(min-width: 1024px)");
-
-    const atualizar = () => {
-      if (mqLg.matches) setColunas(4);
-      else if (mqSm.matches) setColunas(3);
-      else setColunas(2);
-    };
-
-    atualizar();
-    mqSm.addEventListener("change", atualizar);
-    mqLg.addEventListener("change", atualizar);
-    return () => {
-      mqSm.removeEventListener("change", atualizar);
-      mqLg.removeEventListener("change", atualizar);
-    };
-  }, []);
+    const el = ref.current;
+    if (!el) return;
+    const medir = () =>
+      setColunas(Math.max(1, getComputedStyle(el).gridTemplateColumns.split(" ").length));
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
 
   return colunas;
 }
@@ -42,7 +35,8 @@ type CategorySectionProps = {
 };
 
 export function CategorySection({ id, titulo, produtos, lista }: CategorySectionProps) {
-  const colunas = useColunasGrid();
+  const gradeRef = useRef<HTMLDivElement>(null);
+  const colunas = useColunasGrid(gradeRef);
   const [linhasVisiveis, setLinhasVisiveis] = useState(LINHAS_INICIAIS);
   const [mostrarTudo, setMostrarTudo] = useState(false);
 
@@ -94,7 +88,10 @@ export function CategorySection({ id, titulo, produtos, lista }: CategorySection
         </ul>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div
+          ref={gradeRef}
+          className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,10rem),1fr))] gap-4"
+        >
           {produtosVisiveis.map((produto, index) => (
             <ProductCard key={produto.id} produto={produto} atraso={(index % colunas) * 0.05} />
           ))}
