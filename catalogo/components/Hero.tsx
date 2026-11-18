@@ -6,6 +6,7 @@ import Image from "next/image";
 import { WHATSAPP } from "@/lib/contato";
 
 const HOLD_UNTIL_MS = 2000;
+const TROCA_MS = 4000;
 
 
 // Roleta: [esquerda, meio, direita]. Clicar numa casquinha lateral a traz para o meio e o fundo ganha a cor do sabor.
@@ -50,6 +51,13 @@ export function Hero() {
   useEffect(() => {
     if (phase === "done") document.body.style.overflow = "";
   }, [phase]);
+
+  // Gira sozinha; o relógio reinicia a cada troca (inclusive após um clique), e não roda com movimento reduzido.
+  useEffect(() => {
+    if (phase !== "done" || reducedMotion) return;
+    const id = setTimeout(() => setOrdem((o) => girar(o, 2)), TROCA_MS);
+    return () => clearTimeout(id);
+  }, [phase, reducedMotion, ordem]);
 
   if (phase === "intro") {
     return (
